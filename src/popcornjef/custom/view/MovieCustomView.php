@@ -34,7 +34,7 @@ class MovieCustomView extends MovieView {
                 <form id="insert_form_movie_id" class="user" method="post">
                             <input type="hidden" name="enviar_movie" value="1">                
                     <input type="hidden" name="id" value="'.$movie->getId().'">
-                      <!--  
+                       
                     <div class="form-group">
                         <label for="movie_file_path">Movie File Path</label>
                         <input type="file" class="form-control pegarAnexo"  name="movie_file_path" id="movie_file_path" placeholder="Movie File Path">

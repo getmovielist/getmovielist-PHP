@@ -11,6 +11,7 @@ use popcornjef\custom\dao\MovieCustomDAO;
 use popcornjef\custom\view\MovieCustomView;
 use popcornjef\dao\MovieDAO;
 use popcornjef\model\Movie;
+use popcornjef\util\Sessao;
 
 class MovieCustomController  extends MovieController {
     
@@ -89,12 +90,19 @@ class MovieCustomController  extends MovieController {
                     
                     
               <div class="col-md-10">
-                <div class="transparente p-5 text-white bg-dark rounded-3">';
-// 	        $this->add();
+                <div class="p-5 text-white bg-dark rounded-3">';
+	        
+	        $this->add();
 	        echo '
                   <h2>'.$filme->original_title.'</h2>
-                  <p>'.$filme->overview.'</p>
+                  <p>'.$filme->overview.'</p>';
+	        $sessao = new Sessao();
+
+	        if($sessao->getNivelAcesso() == Sessao::NIVEL_ADM){
+	            echo '
                   <button class="btn btn-outline-light" type="button" data-bs-toggle="modal" data-bs-target="#modalFavoritar">Favoritar</button>';
+	        }
+	        
 	        $movie = new Movie();
 	        $movie->setId($movieId);
 	        $lista = $this->dao->fetchById($movie);
@@ -102,14 +110,18 @@ class MovieCustomController  extends MovieController {
 	            $movie = $lista[0];
 	            
 	            if($movie->getMovieFilePath() != ""){
+
 	                echo '
-                  <button class="btn btn-outline-light" type="button"  data-bs-toggle="modal" data-bs-target="#modalAssistir">Assistir</button>
-
-
-
+<div class="row m-3">
+    <video id="video" controls preload="metadata" srt-track="../../filmes/subtitles/'.$movie->getSubtitleBrPath().'">
+       <source src="../../filmes/'.$movie->getMovieFilePath().'" type="video/mp4">
+       <source src="video/sintel-short.webm" type="video/webm">
+    </video>
+</div>
 ';
 	            }
 	            if($movie->getTorrentLink() != ""){
+	                
 	                echo '
                   <a href="" class="btn btn-outline-light" type="button">Torrent</a>';
 	            }
@@ -126,40 +138,9 @@ class MovieCustomController  extends MovieController {
           </div>
       </div>
                       
-                      
-                      
-      
-
-
-<!-- Modal -->
-<div class="modal fade" id="modalAssistir" tabindex="-1" aria-labelledby="modalAssistirLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalAssistirLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <video id="video" controls preload="metadata">
-           <source src="../../filmes/'.$movie->getMovieFilePath().'" type="video/mp4">
-           <source src="video/sintel-short.webm" type="video/webm">
-           <track label="English" kind="subtitles" srclang="pt" src="captions/vtt/sintel-en.vtt" default>
-           <track label="Deutsch" kind="subtitles" srclang="de" src="captions/vtt/sintel-de.vtt">
-           <track label="Español" kind="subtitles" srclang="es" src="captions/vtt/sintel-es.vtt">
-        </video>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-      
-                      
   ';
 	        
-// 	        $this->view->showInsertForm2($movie);
+	        $this->view->showInsertForm2($movie);
 
 	        
 	    }else{
