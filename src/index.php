@@ -182,11 +182,10 @@ $mainContent->main();
 $sessao = new Sessao();
 if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
     $usuarioView = new AppUserCustomView();
-    
-    
     $usuarioView->mostraFormInserir();
 
 }
+
 
 ?>
 

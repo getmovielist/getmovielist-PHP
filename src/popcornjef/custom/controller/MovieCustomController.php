@@ -91,14 +91,23 @@ class MovieCustomController  extends MovieController {
 	    if($sessao->getNivelAcesso() != Sessao::NIVEL_DESLOGADO)
 	    {
 	        
-	        echo '
-                <button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-like" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>
-                <button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger escondido" id="botao-unlike" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>
-                    
-';
+	        $favoriteList = new FavoriteList();
+	        $favoriteList->getAppUser()->setId($sessao->getIdUsuario());
+	        $favoriteList->getMovie()->setId($filme->id);
+	        
+	        $favoriteDao = new FavoriteListCustomDAO($this->dao->getConnection());
+	        $lista = $favoriteDao->fetchByAppUserAndMovie($favoriteList);
+	        if(count($lista) == 0){
+	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger escondido" id="botao-unlike" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
+	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-like" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
+	        }else{
+	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger" id="botao-unlike" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
+	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white escondido" id="botao-like" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
+	        }
+	        
 	    }
 	    if($sessao->getNivelAcesso() != Sessao::NIVEL_ADM){
-	        echo '<button class="btn btn-outline-light m-3" id="botao-editar" type="button">Favoritar</button>';
+	        echo '<button class="btn btn-outline-light m-3" id="botao-editar" type="button">Editar</button>';
 	    }
 	    
 	    
@@ -179,7 +188,7 @@ class MovieCustomController  extends MovieController {
         <div class="card m-1" style="width: 10rem;">
             <img class="card-img-top" src="'.$foto.'" alt="Card image cap">
             <div class="card-body">
-            <p><a href="?id='.$filme->id.'">'.$filme->original_title.'</a> ('.date("Y", strtotime($filme->release_date)).')</p>
+            <p><a href="./?id='.$filme->id.'">'.$filme->original_title.'</a> ('.date("Y", strtotime($filme->release_date)).')</p>
             </div>
         </div>
             ';
@@ -225,7 +234,7 @@ class MovieCustomController  extends MovieController {
       <div class="card m-1" style="width: 10rem;">
           <img class="card-img-top" src="'.$foto.'" alt="Card image cap">
           <div class="card-body">
-          <p><a href="?id='.$filme->id.'">'.$filme->original_title.'</a> ('.date("Y", strtotime($filme->release_date)).')</p>
+          <p><a href="./?id='.$filme->id.'">'.$filme->original_title.'</a> ('.date("Y", strtotime($filme->release_date)).')</p>
           </div>
       </div>
           ';
