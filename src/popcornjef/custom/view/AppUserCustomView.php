@@ -67,7 +67,7 @@ class AppUserCustomView extends AppUserView {
 
       </div>
       <div class="modal-footer">
-         <a class="btn btn-primary" href="?pagina=login">';
+         <a class="btn btn-primary" href="?page=login">';
         if(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) == 'pt')
         {
             echo 'Já tenho conta.';
@@ -76,16 +76,7 @@ class AppUserCustomView extends AppUserView {
         }
         
         echo '</a>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">';
-        if(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) == 'pt')
-        {
-            echo 'Fechar';
-        }else{
-            echo 'Close';
-        }
-        
-        
-        echo '</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <input type="submit" name="enviar_app_user" class="btn btn-primary" value="';
         if(substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) == 'pt')
         {

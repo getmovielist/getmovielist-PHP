@@ -20,7 +20,6 @@ function autoload($classe) {
 }
 spl_autoload_register('autoload');
 
-use popcornjef\custom\controller\MovieCustomController;
 use popcornjef\util\Sessao;
 use popcornjef\custom\controller\AppUserCustomController;
 use popcornjef\custom\view\AppUserCustomView;
@@ -62,7 +61,7 @@ if (isset($_GET["sair"])) {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>GetMovieList</title>
     <style>
     .transparente { background-color: rgba(245, 245, 245, 1);
   opacity: .8; }
@@ -79,7 +78,7 @@ if (isset($_GET["sair"])) {
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="./" class="nav-link px-2 text-secondary">Início</a></li>
-          <li><a href="?page=mylist" class="nav-link px-2 text-white">Favoritos</a></li>
+          <li><a href="?page=mylist" class="nav-link px-2 text-white">My List</a></li>
 
           
         </ul>
