@@ -22,26 +22,37 @@ spl_autoload_register('autoload');
 
 use popcornjef\custom\controller\MovieCustomController;
 use popcornjef\util\Sessao;
+use popcornjef\custom\controller\AppUserCustomController;
+use popcornjef\custom\view\AppUserCustomView;
+use popcornjef\custom\controller\MainContent;
 
-new Sessao();
+$sessao = new Sessao();
 
 if(isset($_GET['ajax'])){
+
     switch ($_GET['ajax']){
-		case 'movie':
-            $controller = new MovieCustomController();
-		    $controller->mainAjax();
-			break;
+
+        case 'app_user':
+            $controller = new AppUserCustomController();
+            $controller->mainAjax();
+            break;
         default:
             echo '<p>Página solicitada não encontrada.</p>';
             break;
     }
-
+    
     exit(0);
 }
-                     
+
+
+if (isset($_GET["sair"])) {
+    $sessao->mataSessao();
+    echo '<META HTTP-EQUIV="REFRESH" CONTENT="0; URL=index.php">';
+    
+}
        
 ?>
-        <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -77,20 +88,52 @@ if(isset($_GET['ajax'])){
           <input type="search" name="pesquisa" class="form-control form-control-dark" placeholder="Pesquisar..." aria-label="Pesquisar">
         </form>
 
-        <div class="text-end">
-          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Login</button>
-          <!-- <button type="button" class="btn btn-warning">Sign-up</button> -->
+		<div class="text-end">
+		
+		
+		<?php 
+		
+		$sessao = new Sessao();
+		if($sessao->getNivelAcesso() != Sessao::NIVEL_DESLOGADO){
+		    echo '<a href="?sair=1" class="btn btn-warning">Sign-out</a>';
+		    
+		}else{
+
+		    
+		    echo '<div class="text-end">
+  <a href="?page=login" class="btn btn-outline-light me-2">Login</a>
+  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalAddUsuario">Sign-up</button>
+</div>            
+';
+		}
+		
+		?>
+		
+          
         </div>
+
       </div>
     </div>
   </header>
 
+
+<?php
+
+$mainContent = new MainContent();
+$mainContent->main();
+
+    
+
+
+?>
+
+
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="loginModalLabel">Modal title</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -104,16 +147,38 @@ if(isset($_GET['ajax'])){
   </div>
 </div>
 
-    <?php
 
 
-    $controller = new MovieCustomController();
-    $controller->main();
+<!-- Modal -->
+<div class="modal fade" id="sigUpModal" tabindex="-1" aria-labelledby="sigUpModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sigUpModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Faça seu login
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php 
+
+$sessao = new Sessao();
+if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
+    $usuarioView = new AppUserCustomView();
+    
+    
+    $usuarioView->mostraFormInserir();
+
+}
 
 ?>
-
-
-
     <!-- Optional JavaScript; choose one of the two! -->
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -129,5 +194,9 @@ if(isset($_GET['ajax'])){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
     -->
 
-  </body>
+        <script src="js/comment.js" ></script>
+        <script src="js/favorite_list.js" ></script>
+        <script src="js/app_user.js" ></script>
+        <script src="js/movie.js" ></script>
+	</body>
 </html>
