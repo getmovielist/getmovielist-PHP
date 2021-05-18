@@ -24,6 +24,7 @@ use popcornjef\util\Sessao;
 use popcornjef\custom\controller\AppUserCustomController;
 use popcornjef\custom\view\AppUserCustomView;
 use popcornjef\custom\controller\MainContent;
+use popcornjef\custom\controller\MovieCustomController;
 
 $sessao = new Sessao();
 
@@ -34,6 +35,14 @@ if(isset($_GET['ajax'])){
         case 'app_user':
             $controller = new AppUserCustomController();
             $controller->mainAjax();
+            break;
+        case 'click_like':
+            $controller = new MovieCustomController();
+            $controller->clickLike();
+            break;
+        case 'click_unlike':
+            $controller = new MovieCustomController();
+            $controller->clickUnLike();
             break;
         default:
             echo '<p>Página solicitada não encontrada.</p>';
@@ -57,15 +66,12 @@ if (isset($_GET["sair"])) {
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+	<link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
+	<link rel="stylesheet" type="text/css" href="css/style.css?a=123" />
     <title>GetMovieList</title>
-    <style>
-    .transparente { background-color: rgba(245, 245, 245, 1);
-  opacity: .8; }
-    </style>
+
   </head>
   <body>
 
@@ -78,12 +84,17 @@ if (isset($_GET["sair"])) {
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="./" class="nav-link px-2 text-secondary">Início</a></li>
-          <li><a href="?page=mylist" class="nav-link px-2 text-white">My List</a></li>
+          <?php 
+          
+          
+          echo '<li><a href="./'.$sessao->getLoginUsuario().'" class="nav-link px-2 text-white">My List</a></li>';
+          
+          ?>
 
           
         </ul>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action=".">
           <input type="search" name="pesquisa" class="form-control form-control-dark" placeholder="Pesquisar..." aria-label="Pesquisar">
         </form>
 
@@ -178,6 +189,27 @@ if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
 }
 
 ?>
+
+<!-- Modal -->
+<div class="modal fade" id="modalResposta" tabindex="-1" aria-labelledby="labelModalResposta" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="labelModalResposta">Resposta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <span id="textoModalResposta"></span>
+      </div>
+      <div class="modal-footer">        
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
     <!-- Optional JavaScript; choose one of the two! -->
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"

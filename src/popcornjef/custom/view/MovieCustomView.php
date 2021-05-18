@@ -15,7 +15,7 @@ class MovieCustomView extends MovieView {
 
     ////////Digite seu código customizado aqui.
 
-    public function showInsertForm2(Movie $movie)
+    public function showEditForm(Movie $movie)
     {
         echo '
 
