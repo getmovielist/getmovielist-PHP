@@ -152,7 +152,7 @@ class MovieCustomController  extends MovieController {
 	      
             
             if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-                echo '<a href="teste" class="float-right btn ml-3 btn-outline-light btn-lg text-white" id="botao-like"><i class="fa fa-play icone-maior"></i></button>';
+                echo '<a href="http://jefponte.ddns.net:888/popcornjef/src/?id='.$movie->getId().'" class="float-right btn ml-3 btn-outline-light btn-lg text-white" id="botao-like"><i class="fa fa-play icone-maior"></i></button>';
             }else{
                 
                 echo '
