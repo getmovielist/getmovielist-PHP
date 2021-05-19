@@ -158,20 +158,14 @@ class MovieCustomController  extends MovieController {
 	      
             
             if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-                echo '<a href="http://jefponte.ddns.net:888/getmovielist/src/?id='.$movie->getId().'" 
+                echo '<a href="http://getmovielist.ddns.net:888/getmovielist/src/?id='.$movie->getId().'" 
                         class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
-            }else if($_SERVER['HTTP_HOST'] == 'jefponte.ddns.net:888' || $_SERVER['HTTP_HOST'] == 'localhost:888'){
+            }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' || $_SERVER['HTTP_HOST'] == 'localhost:888'){
                 $subtitle = new Subtitle();
                 $subtitle->getMovie()->setId($movie->getId());
                 $subtitleDao = new SubtitleCustomDAO($this->dao->getConnection());
                 $lista = $subtitleDao->fetchByMovie($subtitle);
-                
-                /*
-                 * 
-                    
-   <track label="Deutsch" kind="subtitles" srclang="de" src="captions/vtt/sintel-de.vtt">
-   <track label="Español" kind="subtitles" srclang="es" src="captions/vtt/sintel-es.vtt">
-                 */
+
                 echo '
 <div class="row m-3">
                     
