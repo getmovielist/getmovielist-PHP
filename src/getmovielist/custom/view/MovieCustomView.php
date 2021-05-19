@@ -25,11 +25,11 @@ class MovieCustomView extends MovieView {
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="modalEditarLabel">Adicionar Favorito</h5>
+              <h5 class="modal-title" id="modalEditarLabel">Selecionar URL do Filme</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              Adicionar este filme aos favoritos?
+              
 
                 <form id="insert_form_movie_id" class="user" method="post">
                             <input type="hidden" name="edit_movie" value="1">                

@@ -113,6 +113,7 @@ class SubtitleController {
             
 	public function addAjax() {
             
+	    print_r($_POST);
         if(!isset($_POST['enviar_subtitle'])){
             return;    
         }

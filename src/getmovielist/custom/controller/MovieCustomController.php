@@ -12,7 +12,6 @@ use getmovielist\custom\view\MovieCustomView;
 use getmovielist\dao\MovieDAO;
 use getmovielist\model\Movie;
 use getmovielist\util\Sessao;
-use getmovielist\dao\FavoriteListDAO;
 use getmovielist\custom\dao\FavoriteListCustomDAO;
 use getmovielist\model\FavoriteList;
 use getmovielist\model\AppUser;
@@ -106,25 +105,18 @@ class MovieCustomController  extends MovieController {
 	        }
 	        
 	    }
-	    if($sessao->getNivelAcesso() == Sessao::NIVEL_ADM){
-	        echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-editar" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-pencil icone-maior"></i></button>';
-	        echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-cc" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-stack-exchange icone-maior"></i></button>';
-	        
-
-	        
-	    }
-	    
-// 	    var_dump($filme);
 	    $movie = new Movie();
 	    $movie->setId($movieId);
 	    $lista = $this->dao->fetchById($movie);
 	    if(count($lista) > 0){
 	        $movie = $lista[0];
-	        
+	        if($sessao->getNivelAcesso() == Sessao::NIVEL_ADM){
+	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-editar" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-pencil icone-maior"></i></button>';
+	            $subtitleController = new SubtitleCustomController();
+	            $subtitleController->mainAdm($movie);
+	        }
 	        $this->playMovie($movie);
 	    }
-	    
-	    
 	    
 	    echo '
 	        
@@ -158,7 +150,7 @@ class MovieCustomController  extends MovieController {
             if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
                 echo '<a href="http://jefponte.ddns.net:888/getmovielist/src/?id='.$movie->getId().'" 
                         class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
-            }else{
+            }else if($_SERVER['HTTP_HOST'] == 'jefponte.ddns.net:888' || $_SERVER['HTTP_HOST'] == 'localhost:888'){
                 
                 echo '
 <div class="row m-3">
@@ -281,7 +273,6 @@ class MovieCustomController  extends MovieController {
 	    echo '<div class="row d-flex justify-content-center">';
 	    
 	    foreach($filmes as $filme){
-// 	        $filme = new Movie();
 	        $foto = 'https://image.tmdb.org/t/p/original'.$filme->getPosterPath();
 	        if($filme->getPosterPath() == ""){
 	            $foto = 'sem.png';
