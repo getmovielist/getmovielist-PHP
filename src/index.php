@@ -27,7 +27,6 @@ use getmovielist\custom\controller\AppUserCustomController;
 use getmovielist\custom\view\AppUserCustomView;
 use getmovielist\custom\controller\MainContent;
 use getmovielist\custom\controller\MovieCustomController;
-use getmovielist\custom\controller\SubtitleCustomController;
 
 $sessao = new Sessao();
 
