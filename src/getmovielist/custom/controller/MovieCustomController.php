@@ -108,6 +108,9 @@ class MovieCustomController  extends MovieController {
 	    }
 	    if($sessao->getNivelAcesso() == Sessao::NIVEL_ADM){
 	        echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-editar" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-pencil icone-maior"></i></button>';
+	        echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-cc" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-stack-exchange icone-maior"></i></button>';
+	        
+
 	        
 	    }
 	    
@@ -153,7 +156,8 @@ class MovieCustomController  extends MovieController {
 	      
             
             if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-                echo '<a href="http://jefponte.ddns.net:888/getmovielist/src/?id='.$movie->getId().'" class="float-right btn ml-3 btn-outline-light btn-lg text-white" id="botao-like"><i class="fa fa-play icone-maior"></i></button>';
+                echo '<a href="http://jefponte.ddns.net:888/getmovielist/src/?id='.$movie->getId().'" 
+                        class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
             }else{
                 
                 echo '
