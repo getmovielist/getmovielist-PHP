@@ -111,12 +111,13 @@ class MovieCustomController  extends MovieController {
 	        
 	    }
 	    
-	    
+	    var_dump($filme);
 	    $movie = new Movie();
 	    $movie->setId($movieId);
 	    $lista = $this->dao->fetchById($movie);
 	    if(count($lista) > 0){
 	        $movie = $lista[0];
+	        
 	        $this->playMovie($movie);
 	    }
 	    
@@ -161,7 +162,7 @@ class MovieCustomController  extends MovieController {
                     
     <video  controls>
         <source  src="../../filmes/'.$movie->getMovieFilePath().'"   type="video/mp4">
-        <track label="Portugues" kind="subtitles" srclang="pt"  src="../..//filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"   default>
+        <track label="Portugues" kind="subtitles" srclang="pt"  src="../../filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"   default>
         <track label="Español" kind="subtitles" srclang="es"  src="../../filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"  >
     </video>
             
