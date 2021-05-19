@@ -149,21 +149,28 @@ class MovieCustomController  extends MovieController {
 	    }
 	    
         if($movie->getMovieFilePath() != ""){
-	            
-	            echo '
+	      
+            
+            if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
+                echo '<a href="teste" class="float-right btn ml-3 btn-outline-light btn-lg text-white" id="botao-like"><i class="fa fa-play icone-maior"></i></button>';
+            }else{
+                
+                echo '
 <div class="row m-3">
-
-
+                    
+                    
     <video  controls>
-        <source  src="http://localhost:888/filmes/'.$movie->getMovieFilePath().'"   type="video/mp4">
-        <source src="sample_video.webm" type="video/webm">
-        <track label="Portugues" kind="subtitles" srclang="pt"  src="http://localhost:888/filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"   default>
-        <track label="Español" kind="subtitles" srclang="es"  src="http://localhost:888/filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"  >
+        <source  src="../../filmes/'.$movie->getMovieFilePath().'"   type="video/mp4">
+        <track label="Portugues" kind="subtitles" srclang="pt"  src="../..//filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"   default>
+        <track label="Español" kind="subtitles" srclang="es"  src="../../filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"  >
     </video>
-
-
+            
+            
 </div>
 ';
+                
+            }
+            
         }
         if($movie->getTorrentLink() != ""){
             
@@ -174,7 +181,7 @@ class MovieCustomController  extends MovieController {
         if($movie->getSubtitleBrPath() != ""){
             
             echo '
-              <a href="http://187.18.165.104:888/filmes/web_subtitle/'.$movie->getSubtitleBrPath().'" class="btn btn-outline-light" type="button">Legenda</a>';
+              <a href="../..//filmes/web_subtitle/'.$movie->getSubtitleBrPath().'" class="btn btn-outline-light" type="button">Legenda</a>';
         }
 	        
 	}
@@ -254,7 +261,7 @@ class MovieCustomController  extends MovieController {
         <div class="card m-1" style="width: 10rem;">
             <img class="card-img-top" src="'.$foto.'" alt="Card image cap">
             <div class="card-body">
-            <p><a href="./?id='.$filme->id.'">'.$filme->original_title.'</a> ('.date("Y", strtotime($filme->release_date)).')</p>
+                <p><a href="./?id='.$filme->id.'">'.$filme->original_title.'</a> ('.date("Y", strtotime($filme->release_date)).')</p>
             </div>
         </div>
             ';
