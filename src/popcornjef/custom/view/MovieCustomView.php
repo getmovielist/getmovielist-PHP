@@ -21,33 +21,33 @@ class MovieCustomView extends MovieView {
 
                  
       <!-- Modal -->
-      <div class="modal fade" id="modalFavoritar" tabindex="-1" aria-labelledby="modalFavoritarLabel" aria-hidden="true">
+      <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="modalFavoritarLabel">Adicionar Favorito</h5>
+              <h5 class="modal-title" id="modalEditarLabel">Adicionar Favorito</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               Adicionar este filme aos favoritos?
 
                 <form id="insert_form_movie_id" class="user" method="post">
-                            <input type="hidden" name="enviar_movie" value="1">                
+                            <input type="hidden" name="edit_movie" value="1">                
                     <input type="hidden" name="id" value="'.$movie->getId().'">
                        
                     <div class="form-group">
                         <label for="movie_file_path">Movie File Path</label>
-                        <input type="file" class="form-control pegarAnexo"  name="movie_file_path" id="movie_file_path" placeholder="Movie File Path">
+                        <input type="file" class="form-control pegarAnexo"  name="movie_file_path" id="movie_file_path" placeholder="Movie File Path" value="'.$movie->getMovieFilePath().'">
                     </div>
 
                     <div class="form-group">
                         <label for="torrent_link">Torrent Link</label>
-                        <input type="text" class="form-control"  name="torrent_link" id="torrent_link" placeholder="Torrent Link">
+                        <input type="text" class="form-control"  name="torrent_link" id="torrent_link" placeholder="Torrent Link"  value="'.$movie->getTorrentLink().'">
                     </div>
 
                     <div class="form-group">
                         <label for="subtitle_br_path">Subtitle Br Path</label>
-                        <input type="file" class="form-control pegarAnexo"  name="subtitle_br_path" id="subtitle_br_path" placeholder="Subtitle Br Path">
+                        <input type="file" class="form-control pegarAnexo"  name="subtitle_br_path" id="subtitle_br_path" placeholder="Subtitle Br Path"  value="'.$movie->getSubtitleBrPath().'"  >
                     </div>
                 
 	              </form>

@@ -106,8 +106,9 @@ class MovieCustomController  extends MovieController {
 	        }
 	        
 	    }
-	    if($sessao->getNivelAcesso() != Sessao::NIVEL_ADM){
-	        echo '<button class="btn btn-outline-light m-3" id="botao-editar" type="button">Editar</button>';
+	    if($sessao->getNivelAcesso() == Sessao::NIVEL_ADM){
+	        echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-editar" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-pencil icone-maior"></i></button>';
+	        
 	    }
 	    
 	    
@@ -116,25 +117,10 @@ class MovieCustomController  extends MovieController {
 	    $lista = $this->dao->fetchById($movie);
 	    if(count($lista) > 0){
 	        $movie = $lista[0];
-	        
-	        if($movie->getMovieFilePath() != ""){
-	            
-	            echo '
-<div class="row m-3">
-    <video id="video" controls preload="metadata" srt-track="../../filmes/subtitles/'.$movie->getSubtitleBrPath().'">
-       <source src="../../filmes/'.$movie->getMovieFilePath().'" type="video/mp4">
-       <source src="video/sintel-short.webm" type="video/webm">
-    </video>
-</div>
-';
-	        }
-	        if($movie->getTorrentLink() != ""){
-	            
-	            echo '
-                  <a href="" class="btn btn-outline-light" type="button">Torrent</a>';
-	        }
-	        
+	        $this->showMovie($movie);
 	    }
+	    
+	    
 	    
 	    echo '
 	        
@@ -147,9 +133,88 @@ class MovieCustomController  extends MovieController {
       </div>
 	        
   ';
+	    $this->editar($movie);
+	    $this->view->showEditForm($movie);
 	    
 	}
 
+	public function showMovie(Movie $movie){
+
+	    $sessao = new Sessao();
+	    if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
+	        return;
+	    }
+	    if($sessao->getNivelAcesso() == Sessao::NIVEL_COMUM){
+	        return;
+	    }
+	    
+        if($movie->getMovieFilePath() != ""){
+	            
+	            echo '
+<div class="row m-3">
+    <video id="video" controls preload="metadata" srt-track="../../filmes/subtitles/'.$movie->getSubtitleBrPath().'">
+       <source src="../../filmes/'.$movie->getMovieFilePath().'" type="video/mp4">
+       <source src="video/sintel-short.webm" type="video/webm">
+    </video>
+</div>
+';
+        }
+        if($movie->getTorrentLink() != ""){
+            
+            echo '
+              <a href="" class="btn btn-outline-light" type="button">Torrent</a>';
+        }
+        
+        if($movie->getSubtitleBrPath() != ""){
+            
+            echo '
+              <a href="" class="btn btn-outline-light" type="button">Legenda</a>';
+        }
+	        
+	}
+	
+	
+	public function editar(Movie $movie){
+	   
+	    $this->dao->fillById($movie);
+	    
+	    if(!isset($_POST['edit_movie'])){
+	        $this->view->showEditForm($movie);
+	        return;
+	    }
+	    
+	    if (! ( isset ( $_POST ['movie_file_path'] ) && isset ( $_POST ['torrent_link'] ) && isset ( $_POST ['subtitle_br_path'] ))) {
+	        echo "Incompleto";
+	        return;
+	    }
+	    
+	    $movie->setMovieFilePath ( $_POST ['movie_file_path'] );
+	    $movie->setTorrentLink ( $_POST ['torrent_link'] );
+	    $movie->setSubtitleBrPath ( $_POST ['subtitle_br_path'] );
+	    
+	    if ($this->dao->update ($movie ))
+	    {
+	        echo '
+	            
+<div class="alert alert-success" role="alert">
+  Sucesso
+</div>
+	            
+';
+	    } else {
+	        echo '
+	            
+<div class="alert alert-danger" role="alert">
+  Falha
+</div>
+	            
+';
+	    }
+	    echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=.">';
+	    
+	}
+	
+	
 	public function main(){
         
         if(isset($_REQUEST['api'])){
