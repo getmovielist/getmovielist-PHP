@@ -1,9 +1,9 @@
 <?php 
 
-namespace popcornjef\custom\controller;
+namespace getmovielist\custom\controller;
 
-use popcornjef\util\Sessao;
-use popcornjef\model\AppUser;
+use getmovielist\util\Sessao;
+use getmovielist\model\AppUser;
 
 class MainContent{
     

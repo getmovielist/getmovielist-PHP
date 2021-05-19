@@ -14,6 +14,7 @@ class DAO {
 		return $this->sgdb;
 	}
 	public function __construct(PDO $connection = null, $iniFile = DB_INI) {
+	    
 	    $this->iniFile = $iniFile;
 		if ($connection  != null) {
 			$this->connection = $connection;

@@ -1,12 +1,13 @@
 <?php
             
-define("DB_INI", "../popcornjef_db.ini");
-define("API_INI", "../popcornjef_api_rest.ini");
-             
-function autoload($classe) {
 
-    $prefix = 'popcornjef';
-    $base_dir = 'popcornjef';
+define("DB_INI", "../getmovielist_db.ini");
+define("API_INI", "../getmovielist_api_rest.ini");
+
+function autoload($classe) {
+    
+    $prefix = 'getmovielist';
+    $base_dir = 'getmovielist';
     $len = strlen($prefix);
     if (strncmp($prefix, $classe, $len) !== 0) {
         return;
@@ -16,15 +17,17 @@ function autoload($classe) {
     if (file_exists($file)) {
         require $file;
     }
-
+    
 }
 spl_autoload_register('autoload');
 
-use popcornjef\util\Sessao;
-use popcornjef\custom\controller\AppUserCustomController;
-use popcornjef\custom\view\AppUserCustomView;
-use popcornjef\custom\controller\MainContent;
-use popcornjef\custom\controller\MovieCustomController;
+
+use getmovielist\util\Sessao;
+use getmovielist\custom\controller\AppUserCustomController;
+use getmovielist\custom\view\AppUserCustomView;
+use getmovielist\custom\controller\MainContent;
+use getmovielist\custom\controller\MovieCustomController;
+use getmovielist\dao\DAO;
 
 $sessao = new Sessao();
 
@@ -58,7 +61,7 @@ if (isset($_GET["sair"])) {
     echo '<META HTTP-EQUIV="REFRESH" CONTENT="0; URL=index.php">';
     
 }
-       
+
 ?>
 <!doctype html>
 <html lang="en">

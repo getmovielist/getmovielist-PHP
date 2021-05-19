@@ -20,5 +20,6 @@ class FavoriteListCustomController  extends FavoriteListController {
 
 
 	        
+	
 }
 ?>

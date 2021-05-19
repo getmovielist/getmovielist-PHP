@@ -1,6 +1,6 @@
 <?php
 
-namespace popcornjef\util;
+namespace getmovielist\util;
 /**
  * Essa classe serve para iniciar uma sess�o usando cookie e session. 
  * Serve para facilitar a utiliza��o dessas ferramentas. 

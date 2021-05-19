@@ -18,6 +18,7 @@ class CommentCustomController  extends CommentController {
 		$this->view = new CommentCustomView();
 	}
 
+	
 
 	        
 }
