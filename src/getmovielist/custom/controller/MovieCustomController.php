@@ -170,15 +170,20 @@ class MovieCustomController  extends MovieController {
 <div class="row m-3">
                     
                     
-    <video  controls>
-        <source  src="../../filmes/'.$movie->getMovieFilePath().'"   type="video/mp4">';
+';
+                
+        
+                echo '
+            <video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
+  <source src="../../filmes/'.$movie->getMovieFilePath().'" type="video/mp4">';
                 foreach($lista as $element){
-                    echo '<track label="'.$element->getLabel().'" kind="subtitles" srclang="en" src="../../filmes/subtitles/vtt/'.$element->getFilePath().'" default>';
+                    echo '<track kind="captions" label="'.$element->getLabel().'" srclang="pt" src="../../filmes/subtitles/vtt/'.$element->getFilePath().'" default>';
                 }
                 echo '
-        
-    </video>
-            
+  
+
+  Your browser does not support the video tag.
+</video>
             
 </div>
 ';
@@ -307,6 +312,8 @@ class MovieCustomController  extends MovieController {
       </div>
 
           ';
+	        
+
 	        
 	        
 	    }

@@ -74,7 +74,9 @@ if (isset($_GET["sair"])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css/style.css?a=123" />
     <title>GetMovieList</title>
-
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="stylesheet" href="plugins/moovie/moovie.css">
+	  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet"> 
   </head>
   <body>
 
@@ -89,8 +91,10 @@ if (isset($_GET["sair"])) {
           <li><a href="./" class="nav-link px-2 text-secondary">Início</a></li>
           <?php 
           
+          if($sessao->getNivelAcesso() != Sessao::NIVEL_DESLOGADO){
+              echo '<li><a href="./'.$sessao->getLoginUsuario().'" class="nav-link px-2 text-white">My List</a></li>';
+          }
           
-          echo '<li><a href="./'.$sessao->getLoginUsuario().'" class="nav-link px-2 text-white">My List</a></li>';
           
           ?>
 
@@ -229,5 +233,18 @@ if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
         <script src="js/favorite_list.js" ></script>
         <script src="js/app_user.js" ></script>
         <script src="js/movie.js" ></script>
+        <script src="plugins/moovie/moovie.js"></script>
+        <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+   var demo = new Moovie({
+     selector: "#example",
+     dimensions: {
+          width: "100%"
+     }
+   });
+});
+        
+        </script>
+        
 	</body>
 </html>
