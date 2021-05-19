@@ -58,22 +58,27 @@ class MovieCustomController  extends MovieController {
 	    $movieId = $_GET['id'];
 	    $url = 'https://api.themoviedb.org/3/movie/'.$movieId.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
 	    
+	    
 	    $ch = curl_init($url);
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	    $filme = json_decode(curl_exec($ch));
 	    
 	    
-	    
+	    $listGeneros = array();
+	    foreach($filme->genres as $valor){
+	        $listGeneros[] = $valor->name;
+	    }
+
 	    echo '
 	        
 	        
-      <div class="col-md-12">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
           <div class="card bg-dark text-white text-white bg-dark">
             <img class="card-img" src="https://image.tmdb.org/t/p/original/'.$filme->backdrop_path.'" alt="Card image">
             <div class="card-img-overlay">
             <div class="row">
-              <div class="col-md-2">
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12">
                 <div class="card bg-dark text-white text-white bg-dark rounded-3">
                 <img class="card-img" src="https://image.tmdb.org/t/p/original'.$filme->poster_path.'" alt="Card image">
               </div>
@@ -81,12 +86,15 @@ class MovieCustomController  extends MovieController {
               </div>
                     
                     
-              <div class="col-md-10">
+              <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12">
                 <div class="p-5 text-white bg-dark rounded-3">';
 	    
 	    echo '
                   <h2>'.$filme->original_title.'</h2>
-                  <p>'.$filme->overview.'</p>';
+                  <p>'.$filme->overview.'</p>
+                    <p>Gêneros: '.implode("/", $listGeneros).'</p>
+';
+	    
 	    
 	    
 	    if($sessao->getNivelAcesso() != Sessao::NIVEL_DESLOGADO)
@@ -298,11 +306,12 @@ class MovieCustomController  extends MovieController {
 	        echo '
 	            
       <div class="card m-1" style="width: 10rem;">
-          <img class="card-img-top" src="'.$foto.'" alt="Card image cap">
-          <div class="card-body">
-          <p><a href="./?id='.$filme->getId().'">'.$filme->getOriginalTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
-          </div>
+            <img class="card-img" src="'.$foto.'" alt="Card image">
+            <div class="card-body">
+              <p><a href="./?id='.$filme->getId().'">'.$filme->getOriginalTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
+            </div>
       </div>
+
           ';
 	        
 	        
