@@ -302,7 +302,7 @@ class MovieCustomController  extends MovieController {
       <div class="card m-1" style="width: 10rem;">
             <img class="card-img" src="'.$foto.'" alt="Card image">
             <div class="card-body">
-              <p><a href="./?id='.$filme->getId().'">'.$filme->getOriginalTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
+              <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
             </div>
       </div>
 
