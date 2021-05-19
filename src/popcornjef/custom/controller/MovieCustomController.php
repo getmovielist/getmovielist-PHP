@@ -152,10 +152,16 @@ class MovieCustomController  extends MovieController {
 	            
 	            echo '
 <div class="row m-3">
-    <video id="video" controls preload="metadata">
-       <source src="http://jefponte.ddns.net:888/filmes/'.$movie->getMovieFilePath().'" type="video/mp4">
-       <source src="video/sintel-short.webm" type="video/webm">
+
+
+    <video  controls>
+        <source  src="http://localhost:888/filmes/'.$movie->getMovieFilePath().'"   type="video/mp4">
+        <source src="sample_video.webm" type="video/webm">
+        <track label="Portugues" kind="subtitles" srclang="pt"  src="http://localhost:888/filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"   default>
+        <track label="Español" kind="subtitles" srclang="es"  src="http://localhost:888/filmes/web_subtitle/'.$movie->getSubtitleBrPath().'"  >
     </video>
+
+
 </div>
 ';
         }
@@ -168,7 +174,7 @@ class MovieCustomController  extends MovieController {
         if($movie->getSubtitleBrPath() != ""){
             
             echo '
-              <a href="" class="btn btn-outline-light" type="button">Legenda</a>';
+              <a href="http://187.18.165.104:888/filmes/web_subtitle/'.$movie->getSubtitleBrPath().'" class="btn btn-outline-light" type="button">Legenda</a>';
         }
 	        
 	}
@@ -180,7 +186,6 @@ class MovieCustomController  extends MovieController {
 
 	    
 	    if (! ( isset ( $_POST ['movie_file_path'] ) && isset ( $_POST ['torrent_link'] ) && isset ( $_POST ['subtitle_br_path'] ))) {
-	        echo "Incompleto";
 	        return;
 	    }
 	    
