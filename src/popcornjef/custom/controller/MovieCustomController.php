@@ -117,7 +117,7 @@ class MovieCustomController  extends MovieController {
 	    $lista = $this->dao->fetchById($movie);
 	    if(count($lista) > 0){
 	        $movie = $lista[0];
-	        $this->showMovie($movie);
+	        $this->playMovie($movie);
 	    }
 	    
 	    
@@ -138,7 +138,7 @@ class MovieCustomController  extends MovieController {
 	    
 	}
 
-	public function showMovie(Movie $movie){
+	public function playMovie(Movie $movie){
 
 	    $sessao = new Sessao();
 	    if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
@@ -152,8 +152,8 @@ class MovieCustomController  extends MovieController {
 	            
 	            echo '
 <div class="row m-3">
-    <video id="video" controls preload="metadata" srt-track="../../filmes/subtitles/'.$movie->getSubtitleBrPath().'">
-       <source src="../../filmes/'.$movie->getMovieFilePath().'" type="video/mp4">
+    <video id="video" controls preload="metadata">
+       <source src="http://jefponte.ddns.net:888/filmes/'.$movie->getMovieFilePath().'" type="video/mp4">
        <source src="video/sintel-short.webm" type="video/webm">
     </video>
 </div>
@@ -177,11 +177,7 @@ class MovieCustomController  extends MovieController {
 	public function editar(Movie $movie){
 	   
 	    $this->dao->fillById($movie);
-	    
-	    if(!isset($_POST['edit_movie'])){
-	        $this->view->showEditForm($movie);
-	        return;
-	    }
+
 	    
 	    if (! ( isset ( $_POST ['movie_file_path'] ) && isset ( $_POST ['torrent_link'] ) && isset ( $_POST ['subtitle_br_path'] ))) {
 	        echo "Incompleto";
