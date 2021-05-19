@@ -147,11 +147,11 @@ class AppUserCustomController  extends AppUserController {
 	    }
 	    
 	    $to = $usuario->getEmail();
-	    $subject = "GetCrudByID - Seu usuário foi cadastrado com sucesso!";
-	    $message = "<p>Bem vindo ao getcrudbyuml! Seu usuário foi cadastrado com sucesso! Aproveite!</p>";
+	    $subject = "GetMovieList - Seu usuário foi cadastrado com sucesso!";
+	    $message = "<p>Bem vindo ao getMovieList! Seu usuário foi cadastrado com sucesso! Aproveite!</p>";
 	    $headers = 'MIME-Version: 1.0' . "\r\n";
 	    $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-	    $headers .= 'From: getCrudById <contato@getcrudbyuml.com>';
+	    $headers .= 'From: GetMovieList <noreply@getmovielist.com>';
 	    
 	    mail($to, $subject, $message, $headers);
 	    $sessao = new Sessao();
