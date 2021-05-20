@@ -10,7 +10,6 @@ namespace getmovielist\model;
 
 class Movie {
 	private $id;
-	private $movieFilePath;
 	private $originalTitle;
 	private $title;
 	private $releaseDate;
@@ -24,13 +23,6 @@ class Movie {
 		    
 	public function getId() {
 		return $this->id;
-	}
-	public function setMovieFilePath($movieFilePath) {
-		$this->movieFilePath = $movieFilePath;
-	}
-		    
-	public function getMovieFilePath() {
-		return $this->movieFilePath;
 	}
 	public function setOriginalTitle($originalTitle) {
 		$this->originalTitle = $originalTitle;
@@ -61,7 +53,7 @@ class Movie {
 		return $this->posterPath;
 	}
 	public function __toString(){
-	    return $this->id.' - '.$this->movieFilePath.' - '.$this->originalTitle.' - '.$this->title.' - '.$this->releaseDate.' - '.$this->posterPath;
+	    return $this->id.' - '.$this->originalTitle.' - '.$this->title.' - '.$this->releaseDate.' - '.$this->posterPath;
 	}
                 
 

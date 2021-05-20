@@ -98,7 +98,7 @@ class CommentDAO extends DAO {
 
 	public function fetch() {
 		$list = array ();
-		$sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie LIMIT 1000";
+		$sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie LIMIT 1000";
 
         try {
             $stmt = $this->connection->prepare($sql);
@@ -121,7 +121,6 @@ class CommentDAO extends DAO {
                 $comment->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $comment->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $comment->getMovie()->setId( $row ['id_movie_movie'] );
-                $comment->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $comment->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $comment->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $comment->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );
@@ -141,7 +140,7 @@ class CommentDAO extends DAO {
         $lista = array();
 	    $id = $comment->getId();
                 
-        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
+        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
             WHERE comment.id = :id";
                 
         try {
@@ -161,7 +160,6 @@ class CommentDAO extends DAO {
                 $comment->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $comment->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $comment->getMovie()->setId( $row ['id_movie_movie'] );
-                $comment->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $comment->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $comment->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $comment->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );
@@ -182,7 +180,7 @@ class CommentDAO extends DAO {
         $lista = array();
 	    $appUser = $comment->getAppUser()->getId();
                 
-        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
+        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
             WHERE comment.id_app_user = :appUser";
                 
         try {
@@ -202,7 +200,6 @@ class CommentDAO extends DAO {
                 $comment->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $comment->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $comment->getMovie()->setId( $row ['id_movie_movie'] );
-                $comment->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $comment->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $comment->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $comment->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );
@@ -223,7 +220,7 @@ class CommentDAO extends DAO {
         $lista = array();
 	    $text = $comment->getText();
                 
-        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
+        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
             WHERE comment.text like :text";
                 
         try {
@@ -243,7 +240,6 @@ class CommentDAO extends DAO {
                 $comment->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $comment->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $comment->getMovie()->setId( $row ['id_movie_movie'] );
-                $comment->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $comment->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $comment->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $comment->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );
@@ -264,7 +260,7 @@ class CommentDAO extends DAO {
         $lista = array();
 	    $movie = $comment->getMovie()->getId();
                 
-        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
+        $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
             WHERE comment.id_movie = :movie";
                 
         try {
@@ -284,7 +280,6 @@ class CommentDAO extends DAO {
                 $comment->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $comment->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $comment->getMovie()->setId( $row ['id_movie_movie'] );
-                $comment->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $comment->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $comment->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $comment->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );
@@ -304,7 +299,7 @@ class CommentDAO extends DAO {
     public function fillById(Comment $comment) {
         
 	    $id = $comment->getId();
-	    $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
+	    $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
                 WHERE comment.id = :id
                  LIMIT 1000";
                 
@@ -328,7 +323,6 @@ class CommentDAO extends DAO {
                 $comment->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $comment->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $comment->getMovie()->setId( $row ['id_movie_movie'] );
-                $comment->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $comment->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $comment->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $comment->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );
@@ -345,7 +339,7 @@ class CommentDAO extends DAO {
     public function fillByText(Comment $comment) {
         
 	    $text = $comment->getText();
-	    $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
+	    $sql = "SELECT comment.id, comment.text, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM comment INNER JOIN app_user as app_user ON app_user.id = comment.id_app_user INNER JOIN movie as movie ON movie.id = comment.id_movie
                 WHERE comment.text = :text
                  LIMIT 1000";
                 
@@ -369,7 +363,6 @@ class CommentDAO extends DAO {
                 $comment->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $comment->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $comment->getMovie()->setId( $row ['id_movie_movie'] );
-                $comment->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $comment->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $comment->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $comment->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );

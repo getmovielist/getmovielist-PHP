@@ -1,47 +1,42 @@
 <?php
             
 /**
- * Classe de visao para Subtitle
+ * Classe de visao para TorrentMovie
  * @author Jefferson Uchôa Ponte <j.pontee@gmail.com>
  *
  */
 
 namespace getmovielist\view;
-use getmovielist\model\Subtitle;
+use getmovielist\model\TorrentMovie;
 
 
-class SubtitleView {
+class TorrentMovieView {
     public function showInsertForm($listaMovieFile) {
 		echo '
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary m-3" data-toggle="modal" data-target="#modalAddSubtitle">
+<button type="button" class="btn btn-primary m-3" data-toggle="modal" data-target="#modalAddTorrentMovie">
   Adicionar
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="modalAddSubtitle" tabindex="-1" role="dialog" aria-labelledby="labelAddSubtitle" aria-hidden="true">
+<div class="modal fade" id="modalAddTorrentMovie" tabindex="-1" role="dialog" aria-labelledby="labelAddTorrentMovie" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="labelAddSubtitle">Adicionar Subtitle</h5>
+        <h5 class="modal-title" id="labelAddTorrentMovie">Adicionar Torrent Movie</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-          <form id="insert_form_subtitle" class="user" method="post">
-            <input type="hidden" name="enviar_subtitle" value="1">                
+          <form id="insert_form_torrent_movie" class="user" method="post">
+            <input type="hidden" name="enviar_torrent_movie" value="1">                
 
 
 
                                         <div class="form-group">
-                                            <label for="label">Label</label>
-                                            <input type="text" class="form-control"  name="label" id="label" placeholder="Label">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="file_path">File Path</label>
-                                            <input type="text" class="form-control"  name="file_path" id="file_path" placeholder="File Path">
+                                            <label for="link">Link</label>
+                                            <input type="text" class="form-control"  name="link" id="link" placeholder="Link">
                                         </div>
                                         <div class="form-group">
                                           <label for="movie_file">Movie File</label>
@@ -62,7 +57,7 @@ class SubtitleView {
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        <button form="insert_form_subtitle" type="submit" class="btn btn-primary">Cadastrar</button>
+        <button form="insert_form_torrent_movie" type="submit" class="btn btn-primary">Cadastrar</button>
       </div>
     </div>
   </div>
@@ -85,7 +80,7 @@ class SubtitleView {
 
           <div class="card">
                 <div class="card-header">
-                  Lista Subtitle
+                  Lista Torrent Movie
                 </div>
                 <div class="card-body">
                                             
@@ -96,8 +91,7 @@ class SubtitleView {
 				<thead>
 					<tr>
 						<th>Id</th>
-						<th>Label</th>
-						<th>File Path</th>
+						<th>Link</th>
 						<th>Movie File</th>
                         <th>Actions</th>
 					</tr>
@@ -105,8 +99,7 @@ class SubtitleView {
 				<tfoot>
 					<tr>
                         <th>Id</th>
-                        <th>Label</th>
-                        <th>File Path</th>
+                        <th>Link</th>
 						<th>Movie File</th>
                         <th>Actions</th>
 					</tr>
@@ -116,13 +109,12 @@ class SubtitleView {
             foreach($lista as $element){
                 echo '<tr>';
                 echo '<td>'.$element->getId().'</td>';
-                echo '<td>'.$element->getLabel().'</td>';
-                echo '<td>'.$element->getFilePath().'</td>';
+                echo '<td>'.$element->getLink().'</td>';
                 echo '<td>'.$element->getMovieFile().'</td>';
                 echo '<td>
-                        <a href="?page=subtitle&select='.$element->getId().'" class="btn btn-info text-white">Select</a>
-                        <a href="?page=subtitle&edit='.$element->getId().'" class="btn btn-success text-white">Edit</a>
-                        <a href="?page=subtitle&delete='.$element->getId().'" class="btn btn-danger text-white">Delete</a>
+                        <a href="?page=torrent_movie&select='.$element->getId().'" class="btn btn-info text-white">Select</a>
+                        <a href="?page=torrent_movie&edit='.$element->getId().'" class="btn btn-success text-white">Edit</a>
+                        <a href="?page=torrent_movie&delete='.$element->getId().'" class="btn btn-danger text-white">Delete</a>
                       </td>';
                 echo '</tr>';
             }
@@ -143,7 +135,7 @@ class SubtitleView {
             
 
             
-	public function showEditForm($listaMovieFile, Subtitle $selecionado) {
+	public function showEditForm($listaMovieFile, TorrentMovie $selecionado) {
 		echo '
 	    
 	    
@@ -151,17 +143,13 @@ class SubtitleView {
 <div class="card o-hidden border-0 shadow-lg mb-4">
     <div class="card">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Edit Subtitle</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Edit Torrent Movie</h6>
         </div>
         <div class="card-body">
-            <form class="user" method="post" id="edit_form_subtitle">
+            <form class="user" method="post" id="edit_form_torrent_movie">
                                         <div class="form-group">
-                                            <label for="label">Label</label>
-                                            <input type="text" class="form-control" value="'.$selecionado->getLabel().'"  name="label" id="label" placeholder="Label">
-                						</div>
-                                        <div class="form-group">
-                                            <label for="file_path">File Path</label>
-                                            <input type="text" class="form-control" value="'.$selecionado->getFilePath().'"  name="file_path" id="file_path" placeholder="File Path">
+                                            <label for="link">Link</label>
+                                            <input type="text" class="form-control" value="'.$selecionado->getLink().'"  name="link" id="link" placeholder="Link">
                 						</div>
                                         <div class="form-group">
                                           <label for="movie_file">Movie File</label>
@@ -175,12 +163,12 @@ class SubtitleView {
         echo '
                                           </select>
                 						</div>
-                <input type="hidden" value="1" name="edit_subtitle">
+                <input type="hidden" value="1" name="edit_torrent_movie">
                 </form>
 
         </div>
         <div class="modal-footer">
-            <button form="edit_form_subtitle" type="submit" class="btn btn-primary">Cadastrar</button>
+            <button form="edit_form_torrent_movie" type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
     </div>
 </div>
@@ -195,19 +183,18 @@ class SubtitleView {
 
 
             
-        public function showSelected(Subtitle $subtitle){
+        public function showSelected(TorrentMovie $torrentmovie){
             echo '
             
 	<div class="card o-hidden border-0 shadow-lg">
         <div class="card">
             <div class="card-header">
-                  Subtitle selecionado
+                  Torrent Movie selecionado
             </div>
             <div class="card-body">
-                Id: '.$subtitle->getId().'<br>
-                Label: '.$subtitle->getLabel().'<br>
-                File Path: '.$subtitle->getFilePath().'<br>
-                Movie File: '.$subtitle->getMovieFile().'<br>
+                Id: '.$torrentmovie->getId().'<br>
+                Link: '.$torrentmovie->getLink().'<br>
+                Movie File: '.$torrentmovie->getMovieFile().'<br>
             
             </div>
         </div>
@@ -219,7 +206,7 @@ class SubtitleView {
 
 
                                             
-    public function confirmDelete(Subtitle $subtitle) {
+    public function confirmDelete(TorrentMovie $torrentMovie) {
 		echo '
         
         
@@ -232,11 +219,11 @@ class SubtitleView {
 							<div class="col-lg-12">
 								<div class="p-5">
 									<div class="text-center">
-										<h1 class="h4 text-gray-900 mb-4"> Delete Subtitle</h1>
+										<h1 class="h4 text-gray-900 mb-4"> Delete Torrent Movie</h1>
 									</div>
 						              <form class="user" method="post">                    Are you sure you want to delete this object?
 
-                                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Delete" name="delete_subtitle">
+                                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Delete" name="delete_torrent_movie">
                                         <hr>
                                             
 						              </form>

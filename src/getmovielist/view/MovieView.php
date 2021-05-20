@@ -35,11 +35,6 @@ class MovieView {
 
 
                                         <div class="form-group">
-                                            <label for="movie_file_path">Movie File Path</label>
-                                            <input type="text" class="form-control"  name="movie_file_path" id="movie_file_path" placeholder="Movie File Path">
-                                        </div>
-
-                                        <div class="form-group">
                                             <label for="original_title">Original Title</label>
                                             <input type="text" class="form-control"  name="original_title" id="original_title" placeholder="Original Title">
                                         </div>
@@ -99,18 +94,18 @@ class MovieView {
 				<thead>
 					<tr>
 						<th>Id</th>
-						<th>Movie File Path</th>
 						<th>Original Title</th>
 						<th>Title</th>
+						<th>Release Date</th>
                         <th>Actions</th>
 					</tr>
 				</thead>
 				<tfoot>
 					<tr>
                         <th>Id</th>
-                        <th>Movie File Path</th>
                         <th>Original Title</th>
                         <th>Title</th>
+                        <th>Release Date</th>
                         <th>Actions</th>
 					</tr>
 				</tfoot>
@@ -119,9 +114,9 @@ class MovieView {
             foreach($lista as $element){
                 echo '<tr>';
                 echo '<td>'.$element->getId().'</td>';
-                echo '<td>'.$element->getMovieFilePath().'</td>';
                 echo '<td>'.$element->getOriginalTitle().'</td>';
                 echo '<td>'.$element->getTitle().'</td>';
+                echo '<td>'.$element->getReleaseDate().'</td>';
                 echo '<td>
                         <a href="?page=movie&select='.$element->getId().'" class="btn btn-info text-white">Select</a>
                         <a href="?page=movie&edit='.$element->getId().'" class="btn btn-success text-white">Edit</a>
@@ -158,10 +153,6 @@ class MovieView {
         </div>
         <div class="card-body">
             <form class="user" method="post" id="edit_form_movie">
-                                        <div class="form-group">
-                                            <label for="movie_file_path">Movie File Path</label>
-                                            <input type="text" class="form-control" value="'.$selecionado->getMovieFilePath().'"  name="movie_file_path" id="movie_file_path" placeholder="Movie File Path">
-                						</div>
                                         <div class="form-group">
                                             <label for="original_title">Original Title</label>
                                             <input type="text" class="form-control" value="'.$selecionado->getOriginalTitle().'"  name="original_title" id="original_title" placeholder="Original Title">
@@ -208,7 +199,6 @@ class MovieView {
             </div>
             <div class="card-body">
                 Id: '.$movie->getId().'<br>
-                Movie File Path: '.$movie->getMovieFilePath().'<br>
                 Original Title: '.$movie->getOriginalTitle().'<br>
                 Title: '.$movie->getTitle().'<br>
                 Release Date: '.$movie->getReleaseDate().'<br>

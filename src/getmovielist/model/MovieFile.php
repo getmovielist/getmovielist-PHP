@@ -1,21 +1,20 @@
 <?php
             
 /**
- * Classe feita para manipulação do objeto Subtitle
+ * Classe feita para manipulação do objeto MovieFile
  * feita automaticamente com programa gerador de software inventado por
  * @author Jefferson Uchôa Ponte <j.pontee@gmail.com>
  */
 
 namespace getmovielist\model;
 
-class Subtitle {
+class MovieFile {
 	private $id;
-	private $label;
+	private $movie;
 	private $filePath;
-	private $movieFile;
     public function __construct(){
 
-        $this->movieFile = new MovieFile();
+        $this->movie = new Movie();
     }
 	public function setId($id) {
 		$this->id = $id;
@@ -24,12 +23,12 @@ class Subtitle {
 	public function getId() {
 		return $this->id;
 	}
-	public function setLabel($label) {
-		$this->label = $label;
+	public function setMovie(Movie $movie) {
+		$this->movie = $movie;
 	}
 		    
-	public function getLabel() {
-		return $this->label;
+	public function getMovie() {
+		return $this->movie;
 	}
 	public function setFilePath($filePath) {
 		$this->filePath = $filePath;
@@ -38,15 +37,8 @@ class Subtitle {
 	public function getFilePath() {
 		return $this->filePath;
 	}
-	public function setMovieFile(MovieFile $movieFile) {
-		$this->movieFile = $movieFile;
-	}
-		    
-	public function getMovieFile() {
-		return $this->movieFile;
-	}
 	public function __toString(){
-	    return $this->id.' - '.$this->label.' - '.$this->filePath.' - '.$this->movieFile;
+	    return $this->id.' - '.$this->movie.' - '.$this->filePath;
 	}
                 
 

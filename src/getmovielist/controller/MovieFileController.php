@@ -1,26 +1,26 @@
 <?php
             
 /**
- * Classe feita para manipulação do objeto SubtitleController
+ * Classe feita para manipulação do objeto MovieFileController
  * feita automaticamente com programa gerador de software inventado por
  * @author Jefferson Uchôa Ponte <j.pontee@gmail.com>
  */
 
 namespace getmovielist\controller;
-use getmovielist\dao\SubtitleDAO;
 use getmovielist\dao\MovieFileDAO;
-use getmovielist\model\Subtitle;
-use getmovielist\view\SubtitleView;
+use getmovielist\dao\MovieDAO;
+use getmovielist\model\MovieFile;
+use getmovielist\view\MovieFileView;
 
 
-class SubtitleController {
+class MovieFileController {
 
 	protected  $view;
     protected $dao;
 
 	public function __construct(){
-		$this->dao = new SubtitleDAO();
-		$this->view = new SubtitleView();
+		$this->dao = new MovieFileDAO();
+		$this->view = new MovieFileView();
 	}
 
 
@@ -28,9 +28,9 @@ class SubtitleController {
 	    if(!isset($_GET['delete'])){
 	        return;
 	    }
-        $selected = new Subtitle();
+        $selected = new MovieFile();
 	    $selected->setId($_GET['delete']);
-        if(!isset($_POST['delete_subtitle'])){
+        if(!isset($_POST['delete_movie_file'])){
             $this->view->confirmDelete($selected);
             return;
         }
@@ -39,7 +39,7 @@ class SubtitleController {
 			echo '
 
 <div class="alert alert-success" role="alert">
-  Sucesso ao excluir Subtitle
+  Sucesso ao excluir Movie File
 </div>
 
 ';
@@ -47,12 +47,12 @@ class SubtitleController {
 			echo '
 
 <div class="alert alert-danger" role="alert">
-  Falha ao tentar excluir Subtitle
+  Falha ao tentar excluir Movie File
 </div>
 
 ';
 		}
-    	echo '<META HTTP-EQUIV="REFRESH" CONTENT="2; URL=index.php?page=subtitle">';
+    	echo '<META HTTP-EQUIV="REFRESH" CONTENT="2; URL=index.php?page=movie_file">';
     }
 
 
@@ -66,14 +66,14 @@ class SubtitleController {
 
 	public function add() {
             
-        if(!isset($_POST['enviar_subtitle'])){
-            $movieFileDao = new MovieFileDAO($this->dao->getConnection());
-            $listMovieFile = $movieFileDao->fetch();
+        if(!isset($_POST['enviar_movie_file'])){
+            $movieDao = new MovieDAO($this->dao->getConnection());
+            $listMovie = $movieDao->fetch();
 
-            $this->view->showInsertForm($listMovieFile);
+            $this->view->showInsertForm($listMovie);
 		    return;
 		}
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie']))) {
 			echo '
                 <div class="alert alert-danger" role="alert">
                     Failed to register. Some field must be missing. 
@@ -82,17 +82,16 @@ class SubtitleController {
                 ';
 			return;
 		}
-		$subtitle = new Subtitle ();
-		$subtitle->setLabel ( $_POST ['label'] );
-		$subtitle->setFilePath ( $_POST ['file_path'] );
-		$subtitle->getMovieFile()->setId ( $_POST ['movie_file'] );
+		$movieFile = new MovieFile ();
+		$movieFile->setFilePath ( $_POST ['file_path'] );
+		$movieFile->getMovie()->setId ( $_POST ['movie'] );
             
-		if ($this->dao->insert ($subtitle ))
+		if ($this->dao->insert ($movieFile ))
         {
 			echo '
 
 <div class="alert alert-success" role="alert">
-  Sucesso ao inserir Subtitle
+  Sucesso ao inserir Movie File
 </div>
 
 ';
@@ -100,12 +99,12 @@ class SubtitleController {
 			echo '
 
 <div class="alert alert-danger" role="alert">
-  Falha ao tentar Inserir Subtitle
+  Falha ao tentar Inserir Movie File
 </div>
 
 ';
 		}
-        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=subtitle">';
+        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=movie_file">';
 	}
 
 
@@ -113,23 +112,22 @@ class SubtitleController {
             
 	public function addAjax() {
             
-        if(!isset($_POST['enviar_subtitle'])){
+        if(!isset($_POST['enviar_movie_file'])){
             return;    
         }
         
 		    
 		
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie']))) {
 			echo ':incompleto';
 			return;
 		}
             
-		$subtitle = new Subtitle ();
-		$subtitle->setLabel ( $_POST ['label'] );
-		$subtitle->setFilePath ( $_POST ['file_path'] );
-		$subtitle->getMovieFile()->setId ( $_POST ['movie_file'] );
+		$movieFile = new MovieFile ();
+		$movieFile->setFilePath ( $_POST ['file_path'] );
+		$movieFile->getMovie()->setId ( $_POST ['movie'] );
             
-		if ($this->dao->insert ( $subtitle ))
+		if ($this->dao->insert ( $movieFile ))
         {
 			$id = $this->dao->getConnection()->lastInsertId();
             echo ':sucesso:'.$id;
@@ -146,24 +144,23 @@ class SubtitleController {
 	    if(!isset($_GET['edit'])){
 	        return;
 	    }
-        $selected = new Subtitle();
+        $selected = new MovieFile();
 	    $selected->setId($_GET['edit']);
 	    $this->dao->fillById($selected);
 	        
-        if(!isset($_POST['edit_subtitle'])){
-            $moviefileDao = new MovieFileDAO($this->dao->getConnection());
-            $listMovieFile = $moviefileDao->fetch();
+        if(!isset($_POST['edit_movie_file'])){
+            $movieDao = new MovieDAO($this->dao->getConnection());
+            $listMovie = $movieDao->fetch();
 
-            $this->view->showEditForm($listMovieFile, $selected);
+            $this->view->showEditForm($listMovie, $selected);
             return;
         }
             
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie']))) {
 			echo "Incompleto";
 			return;
 		}
 
-		$selected->setLabel ( $_POST ['label'] );
 		$selected->setFilePath ( $_POST ['file_path'] );
             
 		if ($this->dao->update ($selected ))
@@ -184,7 +181,7 @@ class SubtitleController {
 
 ';
 		}
-        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=subtitle">';
+        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=movie_file">';
             
     }
         
@@ -227,7 +224,7 @@ class SubtitleController {
 	    if(!isset($_GET['select'])){
 	        return;
 	    }
-        $selected = new Subtitle();
+        $selected = new MovieFile();
 	    $selected->setId($_GET['select']);
 	        
         $this->dao->fillById($selected);

@@ -1,10 +1,24 @@
 
+CREATE TABLE movie_file (
+        id serial NOT NULL, 
+        CONSTRAINT pk_movie_file PRIMARY KEY (id), 
+        id_movie integer NOT NULL, 
+        file_path character varying(400)
+);
+
+CREATE TABLE torrent_movie (
+        id serial NOT NULL, 
+        CONSTRAINT pk_torrent_movie PRIMARY KEY (id), 
+        link character varying(400), 
+        id_movie_file integer NOT NULL
+);
+
 CREATE TABLE subtitle (
         id serial NOT NULL, 
         CONSTRAINT pk_subtitle PRIMARY KEY (id), 
         label character varying(400), 
         file_path character varying(400), 
-        id_movie integer NOT NULL
+        id_movie_file integer NOT NULL
 );
 
 CREATE TABLE comment (
@@ -35,7 +49,6 @@ CREATE TABLE app_user (
 CREATE TABLE movie (
         id serial NOT NULL, 
         CONSTRAINT pk_movie PRIMARY KEY (id), 
-        movie_file_path character varying(400), 
         original_title character varying(400), 
         title character varying(400), 
         release_date date, 
@@ -43,9 +56,19 @@ CREATE TABLE movie (
 );
 
 
-ALTER TABLE subtitle 
-    ADD CONSTRAINT fk_subtitle_movie FOREIGN KEY (id_movie)
+ALTER TABLE movie_file 
+    ADD CONSTRAINT fk_movie_file_movie FOREIGN KEY (id_movie)
     REFERENCES movie (id);
+
+
+ALTER TABLE torrent_movie 
+    ADD CONSTRAINT fk_torrent_movie_movie_file FOREIGN KEY (id_movie_file)
+    REFERENCES movie_file (id);
+
+
+ALTER TABLE subtitle 
+    ADD CONSTRAINT fk_subtitle_movie_file FOREIGN KEY (id_movie_file)
+    REFERENCES movie_file (id);
 
 
 ALTER TABLE comment 

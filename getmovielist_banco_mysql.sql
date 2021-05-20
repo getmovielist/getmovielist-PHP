@@ -1,10 +1,24 @@
 
+CREATE TABLE IF NOT EXISTS movie_file (
+        id  INT NOT NULL AUTO_INCREMENT , 
+        PRIMARY KEY (id), 
+        id_movie INT NOT NULL, 
+        file_path VARCHAR(400)
+)ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS torrent_movie (
+        id  INT NOT NULL AUTO_INCREMENT , 
+        PRIMARY KEY (id), 
+        link VARCHAR(400), 
+        id_movie_file INT NOT NULL
+)ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS subtitle (
         id  INT NOT NULL AUTO_INCREMENT , 
         PRIMARY KEY (id), 
         label VARCHAR(400), 
         file_path VARCHAR(400), 
-        id_movie INT NOT NULL
+        id_movie_file INT NOT NULL
 )ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS comment (
@@ -35,16 +49,23 @@ CREATE TABLE IF NOT EXISTS app_user (
 CREATE TABLE IF NOT EXISTS movie (
         id  INT NOT NULL AUTO_INCREMENT , 
         PRIMARY KEY (id), 
-        movie_file_path VARCHAR(400), 
         original_title VARCHAR(400), 
         title VARCHAR(400), 
         release_date  DATE , 
         poster_path VARCHAR(400)
 )ENGINE = InnoDB;
 
-ALTER TABLE subtitle
-    ADD CONSTRAINT fk_subtitle_movie FOREIGN KEY (id_movie)
+ALTER TABLE movie_file
+    ADD CONSTRAINT fk_movie_file_movie FOREIGN KEY (id_movie)
     REFERENCES movie (id);
+
+ALTER TABLE torrent_movie
+    ADD CONSTRAINT fk_torrent_movie_movie_file FOREIGN KEY (id_movie_file)
+    REFERENCES movie_file (id);
+
+ALTER TABLE subtitle
+    ADD CONSTRAINT fk_subtitle_movie_file FOREIGN KEY (id_movie_file)
+    REFERENCES movie_file (id);
 
 ALTER TABLE comment
     ADD CONSTRAINT fk_comment_app_user FOREIGN KEY (id_app_user)

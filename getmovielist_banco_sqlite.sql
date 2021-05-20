@@ -1,9 +1,21 @@
 
+CREATE TABLE movie_file (
+    id INTEGER     PRIMARY KEY AUTOINCREMENT,
+    id_movie INTEGER NOT NULL,
+    file_path TEXT 
+);
+
+CREATE TABLE torrent_movie (
+    id INTEGER     PRIMARY KEY AUTOINCREMENT,
+    link TEXT ,
+    id_movie_file INTEGER NOT NULL
+);
+
 CREATE TABLE subtitle (
     id INTEGER     PRIMARY KEY AUTOINCREMENT,
     label TEXT ,
     file_path TEXT ,
-    id_movie INTEGER NOT NULL
+    id_movie_file INTEGER NOT NULL
 );
 
 CREATE TABLE comment (
@@ -30,7 +42,6 @@ CREATE TABLE app_user (
 
 CREATE TABLE movie (
     id INTEGER     PRIMARY KEY AUTOINCREMENT,
-    movie_file_path TEXT ,
     original_title TEXT ,
     title TEXT ,
     release_date TEXT ,

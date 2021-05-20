@@ -69,7 +69,7 @@ class MovieController {
             $this->view->showInsertForm();
 		    return;
 		}
-		if (! ( isset ( $_POST ['movie_file_path'] ) && isset ( $_POST ['original_title'] ) && isset ( $_POST ['title'] ) && isset ( $_POST ['release_date'] ) && isset ( $_POST ['poster_path'] ))) {
+		if (! ( isset ( $_POST ['original_title'] ) && isset ( $_POST ['title'] ) && isset ( $_POST ['release_date'] ) && isset ( $_POST ['poster_path'] ))) {
 			echo '
                 <div class="alert alert-danger" role="alert">
                     Failed to register. Some field must be missing. 
@@ -79,7 +79,6 @@ class MovieController {
 			return;
 		}
 		$movie = new Movie ();
-		$movie->setMovieFilePath ( $_POST ['movie_file_path'] );
 		$movie->setOriginalTitle ( $_POST ['original_title'] );
 		$movie->setTitle ( $_POST ['title'] );
 		$movie->setReleaseDate ( $_POST ['release_date'] );
@@ -117,13 +116,12 @@ class MovieController {
         
 		    
 		
-		if (! ( isset ( $_POST ['movie_file_path'] ) && isset ( $_POST ['original_title'] ) && isset ( $_POST ['title'] ) && isset ( $_POST ['release_date'] ) && isset ( $_POST ['poster_path'] ))) {
+		if (! ( isset ( $_POST ['original_title'] ) && isset ( $_POST ['title'] ) && isset ( $_POST ['release_date'] ) && isset ( $_POST ['poster_path'] ))) {
 			echo ':incompleto';
 			return;
 		}
             
 		$movie = new Movie ();
-		$movie->setMovieFilePath ( $_POST ['movie_file_path'] );
 		$movie->setOriginalTitle ( $_POST ['original_title'] );
 		$movie->setTitle ( $_POST ['title'] );
 		$movie->setReleaseDate ( $_POST ['release_date'] );
@@ -155,12 +153,11 @@ class MovieController {
             return;
         }
             
-		if (! ( isset ( $_POST ['movie_file_path'] ) && isset ( $_POST ['original_title'] ) && isset ( $_POST ['title'] ) && isset ( $_POST ['release_date'] ) && isset ( $_POST ['poster_path'] ))) {
+		if (! ( isset ( $_POST ['original_title'] ) && isset ( $_POST ['title'] ) && isset ( $_POST ['release_date'] ) && isset ( $_POST ['poster_path'] ))) {
 			echo "Incompleto";
 			return;
 		}
 
-		$selected->setMovieFilePath ( $_POST ['movie_file_path'] );
 		$selected->setOriginalTitle ( $_POST ['original_title'] );
 		$selected->setTitle ( $_POST ['title'] );
 		$selected->setReleaseDate ( $_POST ['release_date'] );

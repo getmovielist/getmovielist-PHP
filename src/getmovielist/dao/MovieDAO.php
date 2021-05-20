@@ -24,13 +24,11 @@ class MovieDAO extends DAO {
             
         $sql = "UPDATE movie
                 SET
-                movie_file_path = :movieFilePath,
                 original_title = :originalTitle,
                 title = :title,
                 release_date = :releaseDate,
                 poster_path = :posterPath
                 WHERE movie.id = :id;";
-			$movieFilePath = $movie->getMovieFilePath();
 			$originalTitle = $movie->getOriginalTitle();
 			$title = $movie->getTitle();
 			$releaseDate = $movie->getReleaseDate();
@@ -40,7 +38,6 @@ class MovieDAO extends DAO {
             
             $stmt = $this->getConnection()->prepare($sql);
 			$stmt->bindParam(":id", $id, PDO::PARAM_INT);
-			$stmt->bindParam(":movieFilePath", $movieFilePath, PDO::PARAM_STR);
 			$stmt->bindParam(":originalTitle", $originalTitle, PDO::PARAM_STR);
 			$stmt->bindParam(":title", $title, PDO::PARAM_STR);
 			$stmt->bindParam(":releaseDate", $releaseDate, PDO::PARAM_STR);
@@ -56,8 +53,7 @@ class MovieDAO extends DAO {
             
 
     public function insert(Movie $movie){
-        $sql = "INSERT INTO movie(movie_file_path, original_title, title, release_date, poster_path) VALUES (:movieFilePath, :originalTitle, :title, :releaseDate, :posterPath);";
-		$movieFilePath = $movie->getMovieFilePath();
+        $sql = "INSERT INTO movie(original_title, title, release_date, poster_path) VALUES (:originalTitle, :title, :releaseDate, :posterPath);";
 		$originalTitle = $movie->getOriginalTitle();
 		$title = $movie->getTitle();
 		$releaseDate = $movie->getReleaseDate();
@@ -65,7 +61,6 @@ class MovieDAO extends DAO {
 		try {
 			$db = $this->getConnection();
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(":movieFilePath", $movieFilePath, PDO::PARAM_STR);
 			$stmt->bindParam(":originalTitle", $originalTitle, PDO::PARAM_STR);
 			$stmt->bindParam(":title", $title, PDO::PARAM_STR);
 			$stmt->bindParam(":releaseDate", $releaseDate, PDO::PARAM_STR);
@@ -77,9 +72,8 @@ class MovieDAO extends DAO {
             
     }
     public function insertWithPK(Movie $movie){
-        $sql = "INSERT INTO movie(id, movie_file_path, original_title, title, release_date, poster_path) VALUES (:id, :movieFilePath, :originalTitle, :title, :releaseDate, :posterPath);";
+        $sql = "INSERT INTO movie(id, original_title, title, release_date, poster_path) VALUES (:id, :originalTitle, :title, :releaseDate, :posterPath);";
 		$id = $movie->getId();
-		$movieFilePath = $movie->getMovieFilePath();
 		$originalTitle = $movie->getOriginalTitle();
 		$title = $movie->getTitle();
 		$releaseDate = $movie->getReleaseDate();
@@ -88,7 +82,6 @@ class MovieDAO extends DAO {
 			$db = $this->getConnection();
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":id", $id, PDO::PARAM_INT);
-			$stmt->bindParam(":movieFilePath", $movieFilePath, PDO::PARAM_STR);
 			$stmt->bindParam(":originalTitle", $originalTitle, PDO::PARAM_STR);
 			$stmt->bindParam(":title", $title, PDO::PARAM_STR);
 			$stmt->bindParam(":releaseDate", $releaseDate, PDO::PARAM_STR);
@@ -118,7 +111,7 @@ class MovieDAO extends DAO {
 
 	public function fetch() {
 		$list = array ();
-		$sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie LIMIT 1000";
+		$sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie LIMIT 1000";
 
         try {
             $stmt = $this->connection->prepare($sql);
@@ -133,7 +126,6 @@ class MovieDAO extends DAO {
             {
 		        $movie = new Movie();
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -153,7 +145,7 @@ class MovieDAO extends DAO {
         $lista = array();
 	    $id = $movie->getId();
                 
-        $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+        $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
             WHERE movie.id = :id";
                 
         try {
@@ -165,40 +157,6 @@ class MovieDAO extends DAO {
             foreach ( $result as $row ){
 		        $movie = new Movie();
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
-                $movie->setOriginalTitle( $row ['original_title'] );
-                $movie->setTitle( $row ['title'] );
-                $movie->setReleaseDate( $row ['release_date'] );
-                $movie->setPosterPath( $row ['poster_path'] );
-                $lista [] = $movie;
-
-	
-		    }
-    			    
-        } catch(PDOException $e) {
-            echo $e->getMessage();
-    			    
-        }
-		return $lista;
-    }
-                
-    public function fetchByMovieFilePath(Movie $movie) {
-        $lista = array();
-	    $movieFilePath = $movie->getMovieFilePath();
-                
-        $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
-            WHERE movie.movie_file_path like :movieFilePath";
-                
-        try {
-                
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(":movieFilePath", $movieFilePath, PDO::PARAM_STR);
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            foreach ( $result as $row ){
-		        $movie = new Movie();
-                $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -219,7 +177,7 @@ class MovieDAO extends DAO {
         $lista = array();
 	    $originalTitle = $movie->getOriginalTitle();
                 
-        $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+        $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
             WHERE movie.original_title like :originalTitle";
                 
         try {
@@ -231,7 +189,6 @@ class MovieDAO extends DAO {
             foreach ( $result as $row ){
 		        $movie = new Movie();
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -252,7 +209,7 @@ class MovieDAO extends DAO {
         $lista = array();
 	    $title = $movie->getTitle();
                 
-        $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+        $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
             WHERE movie.title like :title";
                 
         try {
@@ -264,7 +221,6 @@ class MovieDAO extends DAO {
             foreach ( $result as $row ){
 		        $movie = new Movie();
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -285,7 +241,7 @@ class MovieDAO extends DAO {
         $lista = array();
 	    $releaseDate = $movie->getReleaseDate();
                 
-        $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+        $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
             WHERE movie.release_date like :releaseDate";
                 
         try {
@@ -297,7 +253,6 @@ class MovieDAO extends DAO {
             foreach ( $result as $row ){
 		        $movie = new Movie();
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -318,7 +273,7 @@ class MovieDAO extends DAO {
         $lista = array();
 	    $posterPath = $movie->getPosterPath();
                 
-        $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+        $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
             WHERE movie.poster_path like :posterPath";
                 
         try {
@@ -330,7 +285,6 @@ class MovieDAO extends DAO {
             foreach ( $result as $row ){
 		        $movie = new Movie();
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -350,7 +304,7 @@ class MovieDAO extends DAO {
     public function fillById(Movie $movie) {
         
 	    $id = $movie->getId();
-	    $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+	    $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
                 WHERE movie.id = :id
                  LIMIT 1000";
                 
@@ -366,40 +320,6 @@ class MovieDAO extends DAO {
 		    foreach ( $result as $row )
             {
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
-                $movie->setOriginalTitle( $row ['original_title'] );
-                $movie->setTitle( $row ['title'] );
-                $movie->setReleaseDate( $row ['release_date'] );
-                $movie->setPosterPath( $row ['poster_path'] );
-                
-                
-		    }
-		} catch(PDOException $e) {
-		    echo $e->getMessage();
- 		}
-		return $movie;
-    }
-                
-    public function fillByMovieFilePath(Movie $movie) {
-        
-	    $movieFilePath = $movie->getMovieFilePath();
-	    $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
-                WHERE movie.movie_file_path = :movieFilePath
-                 LIMIT 1000";
-                
-        try {
-            $stmt = $this->connection->prepare($sql);
-                
-		    if(!$stmt){
-                echo "<br>Mensagem de erro retornada: ".$this->connection->errorInfo()[2]."<br>";
-		    }
-            $stmt->bindParam(":movieFilePath", $movieFilePath, PDO::PARAM_STR);
-            $stmt->execute();
-		    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		    foreach ( $result as $row )
-            {
-                $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -416,7 +336,7 @@ class MovieDAO extends DAO {
     public function fillByOriginalTitle(Movie $movie) {
         
 	    $originalTitle = $movie->getOriginalTitle();
-	    $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+	    $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
                 WHERE movie.original_title = :originalTitle
                  LIMIT 1000";
                 
@@ -432,7 +352,6 @@ class MovieDAO extends DAO {
 		    foreach ( $result as $row )
             {
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -449,7 +368,7 @@ class MovieDAO extends DAO {
     public function fillByTitle(Movie $movie) {
         
 	    $title = $movie->getTitle();
-	    $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+	    $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
                 WHERE movie.title = :title
                  LIMIT 1000";
                 
@@ -465,7 +384,6 @@ class MovieDAO extends DAO {
 		    foreach ( $result as $row )
             {
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -482,7 +400,7 @@ class MovieDAO extends DAO {
     public function fillByReleaseDate(Movie $movie) {
         
 	    $releaseDate = $movie->getReleaseDate();
-	    $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+	    $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
                 WHERE movie.release_date = :releaseDate
                  LIMIT 1000";
                 
@@ -498,7 +416,6 @@ class MovieDAO extends DAO {
 		    foreach ( $result as $row )
             {
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );
@@ -515,7 +432,7 @@ class MovieDAO extends DAO {
     public function fillByPosterPath(Movie $movie) {
         
 	    $posterPath = $movie->getPosterPath();
-	    $sql = "SELECT movie.id, movie.movie_file_path, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
+	    $sql = "SELECT movie.id, movie.original_title, movie.title, movie.release_date, movie.poster_path FROM movie
                 WHERE movie.poster_path = :posterPath
                  LIMIT 1000";
                 
@@ -531,7 +448,6 @@ class MovieDAO extends DAO {
 		    foreach ( $result as $row )
             {
                 $movie->setId( $row ['id'] );
-                $movie->setMovieFilePath( $row ['movie_file_path'] );
                 $movie->setOriginalTitle( $row ['original_title'] );
                 $movie->setTitle( $row ['title'] );
                 $movie->setReleaseDate( $row ['release_date'] );

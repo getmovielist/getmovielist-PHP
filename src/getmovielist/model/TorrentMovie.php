@@ -1,17 +1,16 @@
 <?php
             
 /**
- * Classe feita para manipulação do objeto Subtitle
+ * Classe feita para manipulação do objeto TorrentMovie
  * feita automaticamente com programa gerador de software inventado por
  * @author Jefferson Uchôa Ponte <j.pontee@gmail.com>
  */
 
 namespace getmovielist\model;
 
-class Subtitle {
+class TorrentMovie {
 	private $id;
-	private $label;
-	private $filePath;
+	private $link;
 	private $movieFile;
     public function __construct(){
 
@@ -24,19 +23,12 @@ class Subtitle {
 	public function getId() {
 		return $this->id;
 	}
-	public function setLabel($label) {
-		$this->label = $label;
+	public function setLink($link) {
+		$this->link = $link;
 	}
 		    
-	public function getLabel() {
-		return $this->label;
-	}
-	public function setFilePath($filePath) {
-		$this->filePath = $filePath;
-	}
-		    
-	public function getFilePath() {
-		return $this->filePath;
+	public function getLink() {
+		return $this->link;
 	}
 	public function setMovieFile(MovieFile $movieFile) {
 		$this->movieFile = $movieFile;
@@ -46,7 +38,7 @@ class Subtitle {
 		return $this->movieFile;
 	}
 	public function __toString(){
-	    return $this->id.' - '.$this->label.' - '.$this->filePath.' - '.$this->movieFile;
+	    return $this->id.' - '.$this->link.' - '.$this->movieFile;
 	}
                 
 

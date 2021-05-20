@@ -1,26 +1,26 @@
 <?php
             
 /**
- * Classe feita para manipulação do objeto SubtitleController
+ * Classe feita para manipulação do objeto TorrentMovieController
  * feita automaticamente com programa gerador de software inventado por
  * @author Jefferson Uchôa Ponte <j.pontee@gmail.com>
  */
 
 namespace getmovielist\controller;
-use getmovielist\dao\SubtitleDAO;
+use getmovielist\dao\TorrentMovieDAO;
 use getmovielist\dao\MovieFileDAO;
-use getmovielist\model\Subtitle;
-use getmovielist\view\SubtitleView;
+use getmovielist\model\TorrentMovie;
+use getmovielist\view\TorrentMovieView;
 
 
-class SubtitleController {
+class TorrentMovieController {
 
 	protected  $view;
     protected $dao;
 
 	public function __construct(){
-		$this->dao = new SubtitleDAO();
-		$this->view = new SubtitleView();
+		$this->dao = new TorrentMovieDAO();
+		$this->view = new TorrentMovieView();
 	}
 
 
@@ -28,9 +28,9 @@ class SubtitleController {
 	    if(!isset($_GET['delete'])){
 	        return;
 	    }
-        $selected = new Subtitle();
+        $selected = new TorrentMovie();
 	    $selected->setId($_GET['delete']);
-        if(!isset($_POST['delete_subtitle'])){
+        if(!isset($_POST['delete_torrent_movie'])){
             $this->view->confirmDelete($selected);
             return;
         }
@@ -39,7 +39,7 @@ class SubtitleController {
 			echo '
 
 <div class="alert alert-success" role="alert">
-  Sucesso ao excluir Subtitle
+  Sucesso ao excluir Torrent Movie
 </div>
 
 ';
@@ -47,12 +47,12 @@ class SubtitleController {
 			echo '
 
 <div class="alert alert-danger" role="alert">
-  Falha ao tentar excluir Subtitle
+  Falha ao tentar excluir Torrent Movie
 </div>
 
 ';
 		}
-    	echo '<META HTTP-EQUIV="REFRESH" CONTENT="2; URL=index.php?page=subtitle">';
+    	echo '<META HTTP-EQUIV="REFRESH" CONTENT="2; URL=index.php?page=torrent_movie">';
     }
 
 
@@ -66,14 +66,14 @@ class SubtitleController {
 
 	public function add() {
             
-        if(!isset($_POST['enviar_subtitle'])){
+        if(!isset($_POST['enviar_torrent_movie'])){
             $movieFileDao = new MovieFileDAO($this->dao->getConnection());
             $listMovieFile = $movieFileDao->fetch();
 
             $this->view->showInsertForm($listMovieFile);
 		    return;
 		}
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['link'] ) &&  isset($_POST ['movie_file']))) {
 			echo '
                 <div class="alert alert-danger" role="alert">
                     Failed to register. Some field must be missing. 
@@ -82,17 +82,16 @@ class SubtitleController {
                 ';
 			return;
 		}
-		$subtitle = new Subtitle ();
-		$subtitle->setLabel ( $_POST ['label'] );
-		$subtitle->setFilePath ( $_POST ['file_path'] );
-		$subtitle->getMovieFile()->setId ( $_POST ['movie_file'] );
+		$torrentMovie = new TorrentMovie ();
+		$torrentMovie->setLink ( $_POST ['link'] );
+		$torrentMovie->getMovieFile()->setId ( $_POST ['movie_file'] );
             
-		if ($this->dao->insert ($subtitle ))
+		if ($this->dao->insert ($torrentMovie ))
         {
 			echo '
 
 <div class="alert alert-success" role="alert">
-  Sucesso ao inserir Subtitle
+  Sucesso ao inserir Torrent Movie
 </div>
 
 ';
@@ -100,12 +99,12 @@ class SubtitleController {
 			echo '
 
 <div class="alert alert-danger" role="alert">
-  Falha ao tentar Inserir Subtitle
+  Falha ao tentar Inserir Torrent Movie
 </div>
 
 ';
 		}
-        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=subtitle">';
+        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=torrent_movie">';
 	}
 
 
@@ -113,23 +112,22 @@ class SubtitleController {
             
 	public function addAjax() {
             
-        if(!isset($_POST['enviar_subtitle'])){
+        if(!isset($_POST['enviar_torrent_movie'])){
             return;    
         }
         
 		    
 		
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['link'] ) &&  isset($_POST ['movie_file']))) {
 			echo ':incompleto';
 			return;
 		}
             
-		$subtitle = new Subtitle ();
-		$subtitle->setLabel ( $_POST ['label'] );
-		$subtitle->setFilePath ( $_POST ['file_path'] );
-		$subtitle->getMovieFile()->setId ( $_POST ['movie_file'] );
+		$torrentMovie = new TorrentMovie ();
+		$torrentMovie->setLink ( $_POST ['link'] );
+		$torrentMovie->getMovieFile()->setId ( $_POST ['movie_file'] );
             
-		if ($this->dao->insert ( $subtitle ))
+		if ($this->dao->insert ( $torrentMovie ))
         {
 			$id = $this->dao->getConnection()->lastInsertId();
             echo ':sucesso:'.$id;
@@ -146,11 +144,11 @@ class SubtitleController {
 	    if(!isset($_GET['edit'])){
 	        return;
 	    }
-        $selected = new Subtitle();
+        $selected = new TorrentMovie();
 	    $selected->setId($_GET['edit']);
 	    $this->dao->fillById($selected);
 	        
-        if(!isset($_POST['edit_subtitle'])){
+        if(!isset($_POST['edit_torrent_movie'])){
             $moviefileDao = new MovieFileDAO($this->dao->getConnection());
             $listMovieFile = $moviefileDao->fetch();
 
@@ -158,13 +156,12 @@ class SubtitleController {
             return;
         }
             
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['link'] ) &&  isset($_POST ['movie_file']))) {
 			echo "Incompleto";
 			return;
 		}
 
-		$selected->setLabel ( $_POST ['label'] );
-		$selected->setFilePath ( $_POST ['file_path'] );
+		$selected->setLink ( $_POST ['link'] );
             
 		if ($this->dao->update ($selected ))
         {
@@ -184,7 +181,7 @@ class SubtitleController {
 
 ';
 		}
-        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=subtitle">';
+        echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=torrent_movie">';
             
     }
         
@@ -227,7 +224,7 @@ class SubtitleController {
 	    if(!isset($_GET['select'])){
 	        return;
 	    }
-        $selected = new Subtitle();
+        $selected = new TorrentMovie();
 	    $selected->setId($_GET['select']);
 	        
         $this->dao->fillById($selected);
