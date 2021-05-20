@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS subtitle (
         PRIMARY KEY (id), 
         label VARCHAR(400), 
         file_path VARCHAR(400), 
-        id_movie_file INT NOT NULL
+        id_movie_file INT NOT NULL, 
+        lang VARCHAR(400)
 )ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS comment (

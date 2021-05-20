@@ -43,6 +43,11 @@ class SubtitleView {
                                             <label for="file_path">File Path</label>
                                             <input type="text" class="form-control"  name="file_path" id="file_path" placeholder="File Path">
                                         </div>
+
+                                        <div class="form-group">
+                                            <label for="lang">Lang</label>
+                                            <input type="text" class="form-control"  name="lang" id="lang" placeholder="Lang">
+                                        </div>
                                         <div class="form-group">
                                           <label for="movie_file">Movie File</label>
                 						  <select class="form-control" id="movie_file" name="movie_file">
@@ -98,6 +103,7 @@ class SubtitleView {
 						<th>Id</th>
 						<th>Label</th>
 						<th>File Path</th>
+						<th>Lang</th>
 						<th>Movie File</th>
                         <th>Actions</th>
 					</tr>
@@ -107,6 +113,7 @@ class SubtitleView {
                         <th>Id</th>
                         <th>Label</th>
                         <th>File Path</th>
+                        <th>Lang</th>
 						<th>Movie File</th>
                         <th>Actions</th>
 					</tr>
@@ -118,6 +125,7 @@ class SubtitleView {
                 echo '<td>'.$element->getId().'</td>';
                 echo '<td>'.$element->getLabel().'</td>';
                 echo '<td>'.$element->getFilePath().'</td>';
+                echo '<td>'.$element->getLang().'</td>';
                 echo '<td>'.$element->getMovieFile().'</td>';
                 echo '<td>
                         <a href="?page=subtitle&select='.$element->getId().'" class="btn btn-info text-white">Select</a>
@@ -164,6 +172,10 @@ class SubtitleView {
                                             <input type="text" class="form-control" value="'.$selecionado->getFilePath().'"  name="file_path" id="file_path" placeholder="File Path">
                 						</div>
                                         <div class="form-group">
+                                            <label for="lang">Lang</label>
+                                            <input type="text" class="form-control" value="'.$selecionado->getLang().'"  name="lang" id="lang" placeholder="Lang">
+                						</div>
+                                        <div class="form-group">
                                           <label for="movie_file">Movie File</label>
                 						  <select class="form-control" id="movie_file" name="movie_file">
                                             <option value="">Selecione o Movie File</option>';
@@ -207,6 +219,7 @@ class SubtitleView {
                 Id: '.$subtitle->getId().'<br>
                 Label: '.$subtitle->getLabel().'<br>
                 File Path: '.$subtitle->getFilePath().'<br>
+                Lang: '.$subtitle->getLang().'<br>
                 Movie File: '.$subtitle->getMovieFile().'<br>
             
             </div>

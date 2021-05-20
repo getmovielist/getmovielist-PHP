@@ -18,7 +18,8 @@ CREATE TABLE subtitle (
         CONSTRAINT pk_subtitle PRIMARY KEY (id), 
         label character varying(400), 
         file_path character varying(400), 
-        id_movie_file integer NOT NULL
+        id_movie_file integer NOT NULL, 
+        lang character varying(400)
 );
 
 CREATE TABLE comment (

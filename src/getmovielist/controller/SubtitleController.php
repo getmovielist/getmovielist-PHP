@@ -73,7 +73,7 @@ class SubtitleController {
             $this->view->showInsertForm($listMovieFile);
 		    return;
 		}
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) && isset ( $_POST ['lang'] ) &&  isset($_POST ['movie_file']))) {
 			echo '
                 <div class="alert alert-danger" role="alert">
                     Failed to register. Some field must be missing. 
@@ -85,6 +85,7 @@ class SubtitleController {
 		$subtitle = new Subtitle ();
 		$subtitle->setLabel ( $_POST ['label'] );
 		$subtitle->setFilePath ( $_POST ['file_path'] );
+		$subtitle->setLang ( $_POST ['lang'] );
 		$subtitle->getMovieFile()->setId ( $_POST ['movie_file'] );
             
 		if ($this->dao->insert ($subtitle ))
@@ -119,7 +120,7 @@ class SubtitleController {
         
 		    
 		
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) && isset ( $_POST ['lang'] ) &&  isset($_POST ['movie_file']))) {
 			echo ':incompleto';
 			return;
 		}
@@ -127,6 +128,7 @@ class SubtitleController {
 		$subtitle = new Subtitle ();
 		$subtitle->setLabel ( $_POST ['label'] );
 		$subtitle->setFilePath ( $_POST ['file_path'] );
+		$subtitle->setLang ( $_POST ['lang'] );
 		$subtitle->getMovieFile()->setId ( $_POST ['movie_file'] );
             
 		if ($this->dao->insert ( $subtitle ))
@@ -158,13 +160,14 @@ class SubtitleController {
             return;
         }
             
-		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie_file']))) {
+		if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) && isset ( $_POST ['lang'] ) &&  isset($_POST ['movie_file']))) {
 			echo "Incompleto";
 			return;
 		}
 
 		$selected->setLabel ( $_POST ['label'] );
 		$selected->setFilePath ( $_POST ['file_path'] );
+		$selected->setLang ( $_POST ['lang'] );
             
 		if ($this->dao->update ($selected ))
         {

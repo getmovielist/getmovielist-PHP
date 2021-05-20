@@ -13,6 +13,7 @@ class Subtitle {
 	private $label;
 	private $filePath;
 	private $movieFile;
+	private $lang;
     public function __construct(){
 
         $this->movieFile = new MovieFile();
@@ -45,8 +46,15 @@ class Subtitle {
 	public function getMovieFile() {
 		return $this->movieFile;
 	}
+	public function setLang($lang) {
+		$this->lang = $lang;
+	}
+		    
+	public function getLang() {
+		return $this->lang;
+	}
 	public function __toString(){
-	    return $this->id.' - '.$this->label.' - '.$this->filePath.' - '.$this->movieFile;
+	    return $this->id.' - '.$this->label.' - '.$this->filePath.' - '.$this->movieFile.' - '.$this->lang;
 	}
                 
 

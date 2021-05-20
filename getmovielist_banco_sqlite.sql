@@ -15,7 +15,8 @@ CREATE TABLE subtitle (
     id INTEGER     PRIMARY KEY AUTOINCREMENT,
     label TEXT ,
     file_path TEXT ,
-    id_movie_file INTEGER NOT NULL
+    id_movie_file INTEGER NOT NULL,
+    lang TEXT 
 );
 
 CREATE TABLE comment (
