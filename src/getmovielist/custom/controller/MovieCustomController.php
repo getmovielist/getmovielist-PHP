@@ -182,7 +182,7 @@ class MovieCustomController  extends MovieController {
                 echo '
   
 
-  Your browser does not support the video tag.
+  Seu navegador não é compatível com o nosso player. 
 </video>
             
 </div>
