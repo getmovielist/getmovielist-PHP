@@ -1,4 +1,12 @@
-
+document.addEventListener("DOMContentLoaded", function() {
+   var demo = new Moovie({
+     selector: "#example",
+     dimensions: {
+          width: "100%"
+     }
+   });
+	
+});
 
 $(document).ready(function(e) {
 	$( "#botao-like" ).click(function() {
