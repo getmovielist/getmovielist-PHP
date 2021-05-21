@@ -169,8 +169,9 @@ class MovieCustomController  extends MovieController {
 	    $subtitleController = new SubtitleCustomController();
 	    $subtitleController->addSubtitle($movie);
 	    
-        echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-editar" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-pencil icone-maior"></i></button>';
-//         echo '<a href="./?teste" class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-magnet icone-maior"></i></a>';
+	    $torrentController = new TorrentMovieCustomController();
+	    $torrentController->addTorrent($movie);
+	    
 
 	        
 	    

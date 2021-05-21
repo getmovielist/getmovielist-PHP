@@ -12,6 +12,8 @@ use getmovielist\model\TorrentMovie;
 
 class TorrentMovieView {
     public function showInsertForm($listaMovieFile) {
+        
+        //echo '<a href="./?teste" class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-magnet icone-maior"></i></a>';
 		echo '
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary m-3" data-toggle="modal" data-target="#modalAddTorrentMovie">
