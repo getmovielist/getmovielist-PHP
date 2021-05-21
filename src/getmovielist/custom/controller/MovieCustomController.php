@@ -345,7 +345,7 @@ class MovieCustomController  extends MovieController {
         echo '
         <div class="p-3 container d-flex justify-content-center">
             <video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
-                <source src="'.$url.'filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
+                <source src="../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
         foreach($subtitleList as $subtitle2){
             echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="'.$url.'filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
         }
