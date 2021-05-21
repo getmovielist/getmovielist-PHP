@@ -18,9 +18,9 @@ class  FavoriteListCustomDAO extends FavoriteListDAO {
         $movie = $favoriteList->getMovie()->getId();
         $appUser = $favoriteList->getAppUser()->getId();
         
-        $sql = "SELECT favorite_list.id, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.movie_file_path as movie_file_path_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM favorite_list INNER JOIN app_user as app_user ON app_user.id = favorite_list.id_app_user INNER JOIN movie as movie ON movie.id = favorite_list.id_movie
-            WHERE 
-                favorite_list.id_app_user = :appUser AND favorite_list.id_movie = :movie";
+        
+        $sql = "SELECT favorite_list.id, app_user.id as id_app_user_app_user, app_user.name as name_app_user_app_user, app_user.email as email_app_user_app_user, app_user.login as login_app_user_app_user, app_user.password as password_app_user_app_user, app_user.level as level_app_user_app_user, movie.id as id_movie_movie, movie.original_title as original_title_movie_movie, movie.title as title_movie_movie, movie.release_date as release_date_movie_movie, movie.poster_path as poster_path_movie_movie FROM favorite_list INNER JOIN app_user as app_user ON app_user.id = favorite_list.id_app_user INNER JOIN movie as movie ON movie.id = favorite_list.id_movie
+            WHERE favorite_list.id_app_user = :appUser AND favorite_list.id_movie = :movie";
         
         
         try {
@@ -32,6 +32,7 @@ class  FavoriteListCustomDAO extends FavoriteListDAO {
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ( $result as $row )
             {
+                $favoriteList = new FavoriteList();
                 $favoriteList->setId( $row ['id'] );
                 $favoriteList->getAppUser()->setId( $row ['id_app_user_app_user'] );
                 $favoriteList->getAppUser()->setName( $row ['name_app_user_app_user'] );
@@ -40,7 +41,6 @@ class  FavoriteListCustomDAO extends FavoriteListDAO {
                 $favoriteList->getAppUser()->setPassword( $row ['password_app_user_app_user'] );
                 $favoriteList->getAppUser()->setLevel( $row ['level_app_user_app_user'] );
                 $favoriteList->getMovie()->setId( $row ['id_movie_movie'] );
-                $favoriteList->getMovie()->setMovieFilePath( $row ['movie_file_path_movie_movie'] );
                 $favoriteList->getMovie()->setOriginalTitle( $row ['original_title_movie_movie'] );
                 $favoriteList->getMovie()->setTitle( $row ['title_movie_movie'] );
                 $favoriteList->getMovie()->setReleaseDate( $row ['release_date_movie_movie'] );

@@ -18,6 +18,9 @@ use getmovielist\model\AppUser;
 use getmovielist\custom\dao\AppUserCustomDAO;
 use getmovielist\custom\dao\SubtitleCustomDAO;
 use getmovielist\model\Subtitle;
+use getmovielist\model\MovieFile;
+use getmovielist\dao\MovieFileDAO;
+use getmovielist\controller\MovieFileController;
 
 class MovieCustomController  extends MovieController {
     
@@ -51,7 +54,6 @@ class MovieCustomController  extends MovieController {
 	    
 	}
 	public function select(){
-	    $sessao = new Sessao();
 	    if(!isset($_GET['id'])){
 	        return;
 	    }
@@ -70,6 +72,7 @@ class MovieCustomController  extends MovieController {
 	        $listGeneros[] = $valor->name;
 	    }
 
+	    
 	    echo '
 	        
 	        
@@ -97,35 +100,15 @@ class MovieCustomController  extends MovieController {
 	    
 	    
 	    
-	    if($sessao->getNivelAcesso() != Sessao::NIVEL_DESLOGADO)
-	    {
-	        
-	        $favoriteList = new FavoriteList();
-	        $favoriteList->getAppUser()->setId($sessao->getIdUsuario());
-	        $favoriteList->getMovie()->setId($filme->id);
-	        $favoriteDao = new FavoriteListCustomDAO($this->dao->getConnection());
-	        $lista = array();
-	        $lista = $favoriteDao->fetchByAppUserAndMovie($favoriteList);
-	        if(count($lista) == 0){
-	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger escondido" id="botao-unlike" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
-	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-like" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
-	        }else{
-	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger" id="botao-unlike" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
-	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white escondido" id="botao-like" href="'.$filme->id.'"><i class="fa fa-heart icone-maior"></i></button>';
-	        }
-	        
-	    }
+	    
 	    $movie = new Movie();
 	    $movie->setId($movieId);
+	    $this->panelLike($movie);
+	    
 	    $lista = $this->dao->fetchById($movie);
 	    if(count($lista) > 0){
 	        $movie = $lista[0];
-	        if($sessao->getNivelAcesso() == Sessao::NIVEL_ADM){
-	            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-editar" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-pencil icone-maior"></i></button>';
-	            $subtitleController = new SubtitleCustomController();
-	            $subtitleController->mainAdm($movie);
-	        }
-	        
+	        $this->panelAdmMovie($movie);
 	        $movie->setPosterPath($filme->backdrop_path);
 	        $this->playMovie($movie);
 	    }
@@ -141,11 +124,55 @@ class MovieCustomController  extends MovieController {
       </div>
 	        
   ';
-	    $this->editar($movie);
-	    $this->view->showEditForm($movie);
+	    
 	    
 	}
 
+	public function panelLike(Movie $movie){
+	    $sessao = new Sessao();
+	    if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO)
+	    {
+	        return;
+	    }
+	        
+        $favoriteList = new FavoriteList();
+        $favoriteList->getAppUser()->setId($sessao->getIdUsuario());
+        $favoriteList->getMovie()->setId($movie->getId());
+        $favoriteDao = new FavoriteListCustomDAO($this->dao->getConnection());
+        $lista = array();
+        $lista = $favoriteDao->fetchByAppUserAndMovie($favoriteList);
+        if(count($lista) == 0){
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger escondido" id="botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+        }else{
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger" id="botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white escondido" id="botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+        }
+	        
+	    
+	}
+	/**
+	 * Adicionar legenda
+	 * Adicionar torrent
+	 * Adicionar arquivo de filme
+	 * 
+	 * @param Movie $movie
+	 */
+	public function panelAdmMovie(Movie $movie){
+	    $sessao = new Sessao();
+	    if($sessao->getNivelAcesso() != Sessao::NIVEL_ADM){
+	        return;
+	    }
+	    $movieFileController = new MovieFileCustomController();
+	    $movieFileController->addFile($movie);
+	    
+        echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-editar" data-bs-toggle="modal" data-bs-target="#modalEditar"><i class="fa fa-pencil icone-maior"></i></button>';
+//         echo '<a href="./?teste" class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-magnet icone-maior"></i></a>';
+//         $subtitleController = new SubtitleCustomController();
+//         $subtitleController->mainAdm($movie);
+	        
+	    
+	}
 	public function playMovie(Movie $movie){
 
 	    $sessao = new Sessao();
@@ -156,7 +183,9 @@ class MovieCustomController  extends MovieController {
 	    if($sessao->getNivelAcesso() == Sessao::NIVEL_COMUM){
 	        return;
 	    }
+	     
 	    
+	    /*
         if($movie->getMovieFilePath() != ""){
 	      
             
@@ -194,7 +223,7 @@ class MovieCustomController  extends MovieController {
             }
             
         }
-        
+        */
         
 	        
 	}

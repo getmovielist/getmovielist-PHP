@@ -11,6 +11,7 @@ use getmovielist\dao\MovieFileDAO;
 use getmovielist\dao\MovieDAO;
 use getmovielist\model\MovieFile;
 use getmovielist\view\MovieFileView;
+use getmovielist\model\Movie;
 
 
 class MovieFileController {
@@ -23,6 +24,45 @@ class MovieFileController {
 		$this->view = new MovieFileView();
 	}
 
+	public function addFile(Movie $movie){
+	    if(!isset($_POST['enviar_movie_file']))
+	    {	        
+	        $this->view->showInsertForm2($movie);
+	        return;
+	    }
+	    if (! ( isset ( $_POST ['file_path'] ) &&  isset($_POST ['movie']))) {
+	        echo '
+                <div class="alert alert-danger" role="alert">
+                    Failed to register. Some field must be missing.
+                </div>
+	            
+                ';
+	        return;
+	    }
+	    $movieFile = new MovieFile ();
+	    $movieFile->setFilePath ( $_POST ['file_path'] );
+	    $movieFile->getMovie()->setId ( $_POST ['movie'] );
+	    
+	    if ($this->dao->insert ($movieFile ))
+	    {
+	        echo '
+	            
+<div class="alert alert-success" role="alert">
+  Sucesso ao inserir Movie File
+</div>
+	            
+';
+	    } else {
+	        echo '
+	            
+<div class="alert alert-danger" role="alert">
+  Falha ao tentar Inserir Movie File
+</div>
+	            
+';
+	    }
+	    echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=index.php?page=movie_file">';
+	}
 
     public function delete(){
 	    if(!isset($_GET['delete'])){
