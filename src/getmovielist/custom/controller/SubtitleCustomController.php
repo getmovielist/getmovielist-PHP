@@ -13,6 +13,8 @@ use getmovielist\model\Movie;
 use getmovielist\model\Subtitle;
 use getmovielist\dao\MovieDAO;
 use getmovielist\util\Sessao;
+use getmovielist\dao\MovieFileDAO;
+use getmovielist\model\MovieFile;
 
 class SubtitleCustomController  extends SubtitleController {
     
@@ -23,18 +25,61 @@ class SubtitleCustomController  extends SubtitleController {
 	}
 
 
-	public function mainAdm(Movie $movie){
+	public function addSubtitle(Movie $movie){
 	    $sessao = new Sessao();
 	    if($sessao->getNivelAcesso() != Sessao::NIVEL_ADM){
 	        return;
 	    }
-	    echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" data-bs-toggle="modal" data-bs-target="#modalAddSubtitle"><i class="fa fa-stack-exchange icone-maior"></i></button>';
-	    $this->view->showInsertForm2($movie);
-	    $this->add();
+	    if(!isset($_POST['enviar_subtitle'])){
+	        $movieFile = new MovieFile();
+	        $movieFile->getMovie()->setId($movie->getId());
+	        $movieFileDao = new MovieFileDAO($this->dao->getConnection());
+	        $listMovieFile = $movieFileDao->fetchByMovie($movieFile);
+	        if(count($listMovieFile) == 0){
+	            return;
+	        }
+	        $this->view->showInsertForm($listMovieFile);
+	        return;
+	    }
+
+
+
+	    if (! ( isset ( $_POST ['label'] ) && isset ( $_POST ['file_path'] ) && isset ( $_POST ['lang'] ) &&  isset($_POST ['movie_file']))) {
+	        echo '
+                <div class="alert alert-danger" role="alert">
+                    Failed to register. Some field must be missing.
+                </div>
+	            
+                ';
+	        return;
+	    }
+	    $subtitle = new Subtitle ();
+	    $subtitle->setLabel ( $_POST ['label'] );
+	    $subtitle->setFilePath ( $_POST ['file_path'] );
+	    $subtitle->setLang ( $_POST ['lang'] );
+	    $subtitle->getMovieFile()->setId ( $_POST ['movie_file'] );
 	    
+	    if ($this->dao->insert ($subtitle ))
+	    {
+	        echo '
+	            
+<div class="alert alert-success" role="alert">
+  Sucesso ao inserir Subtitle
+</div>
+	            
+';
+	    } else {
+	        echo '
+	            
+<div class="alert alert-danger" role="alert">
+  Falha ao tentar Inserir Subtitle
+</div>
+	            
+';
+	    }
+	    echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=?id='.$_GET['id'].'">';
 	}
-	
-	public function add(){
+	public function addNovoVelho(){
 	    if(!isset($_POST['enviar_subtitle'])){
 	        return;
 	    }
