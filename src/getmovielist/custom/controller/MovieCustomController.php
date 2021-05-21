@@ -239,24 +239,27 @@ class MovieCustomController  extends MovieController {
 	        
             echo '<a href="'.$movieFile->getFilePath().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-film icone-maior"></i></a>';
 	        
+            if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
+                echo '<a href="http://getmovielist.ddns.net:888/getmovielist/src/?id='.$movie->getId().'"
+                        class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
+                return;
+            }
+            
 	        
 	        echo '
 
-<video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
-  <source src="../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
-	        
+                <video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
+                  <source src="../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
+            	        
 
 	        foreach($subtitleList as $subtitle2){
 	            echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="../../filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
             }
                 echo '
-  Seu navegador não é compatível com o nosso player. 
-</video>
+                  Seu navegador não é compatível com o nosso player. 
+                </video>
 
 ';
-
-
-
 	        break;
 
 	    }   
