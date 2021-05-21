@@ -113,7 +113,7 @@ class MovieCustomController  extends MovieController {
 	        $movie = $lista[0];
 	        $this->panelAdmMovie($movie);
 	        $movie->setPosterPath($filme->backdrop_path);
-	        $this->playMovie($movie);
+	        $this->painelPrivilegios($movie);
 	    }
 	    
 	    echo '
@@ -180,7 +180,7 @@ class MovieCustomController  extends MovieController {
 	        
 	    
 	}
-	public function playMovie(Movie $movie){
+	public function painelPrivilegios(Movie $movie){
 
 	    $sessao = new Sessao();
 	    
@@ -198,10 +198,6 @@ class MovieCustomController  extends MovieController {
 	    if(count($lista) == 0){
 	        return;
 	    }
-
-
-	    //Download filme: 
-	    //LInk Torrent: 
 	    
 	    echo '
             <hr>Painel de Privilegios</hr><br><br>';
@@ -239,27 +235,12 @@ class MovieCustomController  extends MovieController {
 	        
             echo '<a href="'.$movieFile->getFilePath().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-film icone-maior"></i></a>';
 	        
-            if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-                echo '<a href="http://getmovielist.ddns.net:888/getmovielist/src/?id='.$movie->getId().'"
+
+            echo '<a href="?player='.$movie->getId().'"
                         class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
-                return;
-            }
+                
             
-	        
-	        echo '
 
-                <video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
-                  <source src="../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
-            	        
-
-	        foreach($subtitleList as $subtitle2){
-	            echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="../../filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
-            }
-                echo '
-                  Seu navegador não é compatível com o nosso player. 
-                </video>
-
-';
 	        break;
 
 	    }   
@@ -300,7 +281,56 @@ class MovieCustomController  extends MovieController {
 	    
 	}
 	
-	
+	public function player(){
+	    $sessao = new Sessao();
+	    if(!isset($_GET['player'])){
+	        return;
+	    }
+	    if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
+	        return;
+	    }
+	    if($sessao->getNivelAcesso() == Sessao::NIVEL_COMUM){
+	        return;
+	    }
+	    
+	    $movie = new Movie();
+	    $movie->setId($_GET['player']);
+	    $movieFileDao = new MovieFileDAO($this->dao->getConnection());
+	    $movieFile = new MovieFile();
+	    $movieFile->getMovie()->setId($movie->getId());
+	    $lista = $movieFileDao->fetchByMovie($movieFile);
+	    if(count($lista) == 0){
+	        return;
+	    }
+
+	    $movieFile = new MovieFile();
+	    $movieFile->getMovie()->setId($movie->getId());
+	    $movieFileDao = new MovieFileCustomDAO();
+	    $listaMovieFiles = $movieFileDao->fetchByMovie($movieFile);
+	    
+	    if(count($lista) == 0){
+	        return;
+	    }
+	    $subtitleDao = new SubtitleCustomDAO($this->dao->getConnection());
+	    
+	    foreach($listaMovieFiles as $movieFile){
+	        
+	        $subtitle = new Subtitle();
+	        $subtitle->getMovieFile()->setId($movieFile->getId());
+	        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
+	    }
+        echo '
+            <video id="example" poster="https://image.tmdb.org/t/p/original/'.$movie->getPosterPath().'">
+                <source src="../../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
+        foreach($subtitleList as $subtitle2){
+            echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="../../filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
+        }
+        echo '
+          Seu navegador não é compatível com o nosso player.
+        </video>
+        
+        '; 
+	}
 	public function main(){
         
         if(isset($_REQUEST['api'])){
@@ -309,6 +339,10 @@ class MovieCustomController  extends MovieController {
         }
 	    if(isset($_GET['id'])){
 	        $this->select();
+	        return;
+	    }
+	    if(isset($_GET['player'])){
+	        $this->player();
 	        return;
 	    }
 	    if(isset($_GET['pesquisa'])){
