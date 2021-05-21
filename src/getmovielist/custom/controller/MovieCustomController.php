@@ -331,7 +331,7 @@ class MovieCustomController  extends MovieController {
 	    }
 	    
 	    
-	    $movieId = $_GET['id'];
+	    $movieId = $movie->getId();
 	    $url = 'https://api.themoviedb.org/3/movie/'.$movieId.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
 	    
 	    
