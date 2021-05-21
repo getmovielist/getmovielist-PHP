@@ -21,6 +21,9 @@ use getmovielist\model\Subtitle;
 use getmovielist\model\MovieFile;
 use getmovielist\dao\MovieFileDAO;
 use getmovielist\controller\MovieFileController;
+use getmovielist\custom\dao\MovieFileCustomDAO;
+use getmovielist\model\TorrentMovie;
+use getmovielist\custom\dao\TorrentMovieCustomDAO;
 
 class MovieCustomController  extends MovieController {
     
@@ -163,6 +166,7 @@ class MovieCustomController  extends MovieController {
 	    if($sessao->getNivelAcesso() != Sessao::NIVEL_ADM){
 	        return;
 	    }
+	    echo '<br><hr><p>Painel Adm</p>';
 	    $movieFileController = new MovieFileCustomController();
 	    $movieFileController->addFile($movie);
 	    
@@ -187,48 +191,75 @@ class MovieCustomController  extends MovieController {
 	        return;
 	    }
 	     
+	    $movieFileDao = new MovieFileDAO($this->dao->getConnection());
+	    $movieFile = new MovieFile();
+	    $movieFile->getMovie()->setId($movie->getId());
+	    $lista = $movieFileDao->fetchByMovie($movieFile);
+	    if(count($lista) == 0){
+	        return;
+	    }
+
+
+	    //Download filme: 
+	    //LInk Torrent: 
 	    
-	    /*
-        if($movie->getMovieFilePath() != ""){
-	      
-            
-            if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-                echo '<a href="http://getmovielist.ddns.net:888/getmovielist/src/?id='.$movie->getId().'" 
-                        class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
-            }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888'){
-                $subtitle = new Subtitle();
-                $subtitle->getMovie()->setId($movie->getId());
-                $subtitleDao = new SubtitleCustomDAO($this->dao->getConnection());
-                $lista = $subtitleDao->fetchByMovie($subtitle);
+	    echo '
+            <hr>Painel de Privilegios</hr><br><br>';
+	    $movieFile = new MovieFile();
+	    $movieFile->getMovie()->setId($movie->getId());
+	    $movieFileDao = new MovieFileCustomDAO();
+	    $listaMovieFiles = $movieFileDao->fetchByMovie($movieFile);
+	    
+	    if(count($lista) == 0){
+	        return;
+	    }
 
-                echo '
-<div class="row m-3">
-                    
-                    
-';
-                
-        
-                echo '
-            <video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
-  <source src="../../filmes/'.$movie->getMovieFilePath().'" type="video/mp4">';
-                foreach($lista as $element){
-                    echo '<track kind="captions" label="'.$element->getLabel().'" srclang="pt" src="../../filmes/subtitles/vtt/'.$element->getFilePath().'" default>';
-                }
-                echo '
-  
+	    
+	    
+	    $subtitleDao = new SubtitleCustomDAO($this->dao->getConnection());
+	    $torrentDao = new TorrentMovieCustomDAO($this->dao->getConnection());
+	    
+	    foreach($listaMovieFiles as $movieFile){
 
+	        $torrent = new TorrentMovie();
+	        $torrent->getMovieFile()->setId($movieFile->getId());
+	        $torrentList = $torrentDao->fetchByMovieFile($torrent);
+	        
+	        $subtitle = new Subtitle();
+	        $subtitle->getMovieFile()->setId($movieFile->getId());
+	        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
+	        
+	        foreach($torrentList as $torrent){
+	            echo '<a href="'.$torrent->getLink().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-magnet icone-maior"></i></a>';
+	        }
+	        foreach($subtitleList as $subtitle2)
+	        {
+	            echo '<a href="'.$subtitle2->getFilePath().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-font icone-maior"></i></a>';
+	        }
+	        
+            echo '<a href="'.$movieFile->getFilePath().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-film icone-maior"></i></a>';
+	        
+	        
+	        echo '
+
+<video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
+  <source src="../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
+	        
+
+	        foreach($subtitleList as $subtitle2){
+	            echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="../../filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
+            }
+                echo '
   Seu navegador não é compatível com o nosso player. 
 </video>
-            
-</div>
+
 ';
-                
-            }
-            
-        }
-        */
-        
-	        
+
+
+
+	        break;
+
+	    }   
 	}
 	
 	
