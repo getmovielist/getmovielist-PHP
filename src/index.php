@@ -27,8 +27,17 @@ use getmovielist\custom\controller\AppUserCustomController;
 use getmovielist\custom\view\AppUserCustomView;
 use getmovielist\custom\controller\MainContent;
 use getmovielist\custom\controller\MovieCustomController;
+use getmovielist\model\Movie;
 
 $sessao = new Sessao();
+
+if(isset($_GET['play_movie'])){
+    $movie = new Movie();
+    $movie->getId($_GET['play_movie']);
+    $controller = new MovieCustomController();
+    $controller->playMovie();
+    return;
+}
 
 if(isset($_GET['ajax'])){
 
