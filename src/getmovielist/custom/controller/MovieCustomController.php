@@ -327,7 +327,7 @@ class MovieCustomController  extends MovieController {
 	        $url = 'http://getmovielist.ddns.net:888';
 	    }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888')
 	    {
-	        $url = "../../../";
+	        $url = "../../";
 	    }
 	    
 	    
