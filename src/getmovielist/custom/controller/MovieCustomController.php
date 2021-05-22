@@ -283,6 +283,7 @@ class MovieCustomController  extends MovieController {
 
 	
 	public function player(){
+	    
 	    $sessao = new Sessao();
 	    if(!isset($_GET['player'])){
 	        return;
@@ -290,36 +291,37 @@ class MovieCustomController  extends MovieController {
 	    if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
 	        return;
 	    }
+
 	    if($sessao->getNivelAcesso() == Sessao::NIVEL_COMUM){
 	        return;
 	    }
 	    
-	    $movie = new Movie();
-	    $movie->setId($_GET['player']);
-	    $movieFileDao = new MovieFileDAO($this->dao->getConnection());
-	    $movieFile = new MovieFile();
-	    $movieFile->getMovie()->setId($movie->getId());
-	    $lista = $movieFileDao->fetchByMovie($movieFile);
-	    if(count($lista) == 0){
-	        return;
-	    }
+// 	    $movie = new Movie();
+// 	    $movie->setId($_GET['player']);
+// 	    $movieFileDao = new MovieFileDAO($this->dao->getConnection());
+// 	    $movieFile = new MovieFile();
+// 	    $movieFile->getMovie()->setId($movie->getId());
+// 	    $lista = $movieFileDao->fetchByMovie($movieFile);
+// 	    if(count($lista) == 0){
+// 	        return;
+// 	    }
 
-	    $movieFile = new MovieFile();
-	    $movieFile->getMovie()->setId($movie->getId());
-	    $movieFileDao = new MovieFileCustomDAO();
-	    $listaMovieFiles = $movieFileDao->fetchByMovie($movieFile);
+// 	    $movieFile = new MovieFile();
+// 	    $movieFile->getMovie()->setId($movie->getId());
+// 	    $movieFileDao = new MovieFileCustomDAO();
+// 	    $listaMovieFiles = $movieFileDao->fetchByMovie($movieFile);
 	    
-	    if(count($lista) == 0){
-	        return;
-	    }
-	    $subtitleDao = new SubtitleCustomDAO($this->dao->getConnection());
+// 	    if(count($lista) == 0){
+// 	        return;
+// 	    }
+// 	    $subtitleDao = new SubtitleCustomDAO($this->dao->getConnection());
 	    
-	    foreach($listaMovieFiles as $movieFile){
+// 	    foreach($listaMovieFiles as $movieFile){
 	        
-	        $subtitle = new Subtitle();
-	        $subtitle->getMovieFile()->setId($movieFile->getId());
-	        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
-	    }
+// 	        $subtitle = new Subtitle();
+// 	        $subtitle->getMovieFile()->setId($movieFile->getId());
+// 	        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
+// 	    }
 	    if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
 	        $urlLocal = 'http://getmovielist.ddns.net:888/getmovielist/src/';
 	    }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' 
@@ -328,30 +330,44 @@ class MovieCustomController  extends MovieController {
 	        $urlLocal = "";
 	    }
 	    
-	    
-	    $movieId = $movie->getId();
-	    $url = 'https://api.themoviedb.org/3/movie/'.$movieId.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
-	    
-	    
-	    $ch = curl_init($url);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	    $filme = json_decode(curl_exec($ch));
-	    
-	    $movie->setPosterPath($filme->backdrop_path);
-        echo '
-        <div class="p-3 container d-flex justify-content-center">
-            <video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
-                <source src="'.$urlLocal.'../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
-        foreach($subtitleList as $subtitle2){
-            echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="'.$urlLocal.'../../filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
-        }
-        echo '
-          Seu navegador não é compatível com o nosso player.
-        </video>
-        </div>
-        '; 
+	    echo '<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+  html,body {
+    padding:0;
+    margin:0;
+    width:100%;
+    height:100%;
+  }
+  </style>
+</head>
+<body>
+  <div id="video"></div>
+  <script src="http://jwpsrv.com/library/v71rLsS8EeOxRSIACi0I_Q.js"></script>
+  <script src="/dist/player.js"></script>
+
+  <script type="text/javascript">
+      jwplayer("video").setup({
+          file: "'.$urlLocal.'/filmes/The.Untouchables.1987.1080p.BrRip.x264.BOKUTOX.YIFY.mp4",
+          height: \'100%\',
+          width: \'100%\'
+      });
+
+      var adapter = new playerjs.JWPlayerAdapter(jwplayer());
+
+      jwplayer().onReady(function(){
+        adapter.ready();
+      });
+  </script>
+
+  </script>
+</body>
+</html>
+';
 	}
+
 	public function main(){
         
         if(isset($_REQUEST['api'])){
@@ -533,6 +549,11 @@ class MovieCustomController  extends MovieController {
 	    
 	    
 	}
+	
+	
 	        
 }
+
+
+
 ?>
