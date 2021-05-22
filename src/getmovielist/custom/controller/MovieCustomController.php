@@ -323,49 +323,14 @@ class MovieCustomController  extends MovieController {
 // 	        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
 // 	    }
 	    if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-	        $urlLocal = 'http://getmovielist.ddns.net:888/getmovielist/src/';
+	        $urlLocal = 'http://getmovielist.ddns.net:888/';
 	    }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' 
 	        || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888')
 	    {
 	        $urlLocal = "";
 	    }
 	    
-	    echo '<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-  html,body {
-    padding:0;
-    margin:0;
-    width:100%;
-    height:100%;
-  }
-  </style>
-</head>
-<body>
-  <div id="video"></div>
-  <script src="http://jwpsrv.com/library/v71rLsS8EeOxRSIACi0I_Q.js"></script>
-  <script src="/dist/player.js"></script>
-
-  <script type="text/javascript">
-      jwplayer("video").setup({
-          file: "'.$urlLocal.'/filmes/The.Untouchables.1987.1080p.BrRip.x264.BOKUTOX.YIFY.mp4",
-          height: \'100%\',
-          width: \'100%\'
-      });
-
-      var adapter = new playerjs.JWPlayerAdapter(jwplayer());
-
-      jwplayer().onReady(function(){
-        adapter.ready();
-      });
-  </script>
-
-  </script>
-</body>
-</html>
-';
+	    echo '<iframe class="tscplayer_inline" id="embeddedSmartPlayerInstance" src="http://getmovielist.com/player.js/test/video.php" scrolling="no" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
 	}
 
 	public function main(){

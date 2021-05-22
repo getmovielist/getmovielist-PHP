@@ -29,11 +29,6 @@ use getmovielist\custom\controller\MainContent;
 use getmovielist\custom\controller\MovieCustomController;
 
 $sessao = new Sessao();
-if(isset($_GET['player'])){
-    $controller = new MovieCustomController();
-    $controller->player();
-    return;
-}
 
 if(isset($_GET['ajax'])){
 
