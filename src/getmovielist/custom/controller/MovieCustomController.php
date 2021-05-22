@@ -296,41 +296,7 @@ class MovieCustomController  extends MovieController {
 	        return;
 	    }
 	    
-// 	    $movie = new Movie();
-// 	    $movie->setId($_GET['player']);
-// 	    $movieFileDao = new MovieFileDAO($this->dao->getConnection());
-// 	    $movieFile = new MovieFile();
-// 	    $movieFile->getMovie()->setId($movie->getId());
-// 	    $lista = $movieFileDao->fetchByMovie($movieFile);
-// 	    if(count($lista) == 0){
-// 	        return;
-// 	    }
-
-// 	    $movieFile = new MovieFile();
-// 	    $movieFile->getMovie()->setId($movie->getId());
-// 	    $movieFileDao = new MovieFileCustomDAO();
-// 	    $listaMovieFiles = $movieFileDao->fetchByMovie($movieFile);
-	    
-// 	    if(count($lista) == 0){
-// 	        return;
-// 	    }
-// 	    $subtitleDao = new SubtitleCustomDAO($this->dao->getConnection());
-	    
-// 	    foreach($listaMovieFiles as $movieFile){
-	        
-// 	        $subtitle = new Subtitle();
-// 	        $subtitle->getMovieFile()->setId($movieFile->getId());
-// 	        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
-// 	    }
-	    if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-	        $urlLocal = 'http://getmovielist.ddns.net:888/';
-	    }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' 
-	        || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888')
-	    {
-	        $urlLocal = "";
-	    }
-	    
-	    echo '<iframe class="tscplayer_inline" id="embeddedSmartPlayerInstance" src="http://getmovielist.com/player.js/test/video.php" scrolling="no" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+	    echo '<iframe class="tscplayer_inline"  src="player.js/test/index.php?player='.$_GET['player'].'" scrolling="no" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
 	}
 
 	public function main(){
