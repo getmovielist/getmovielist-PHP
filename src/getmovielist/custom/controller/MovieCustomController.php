@@ -280,10 +280,7 @@ class MovieCustomController  extends MovieController {
 	    echo '<META HTTP-EQUIV="REFRESH" CONTENT="3; URL=.">';
 	    
 	}
-	public function playMovie(){
-	     
-	    
-	}
+
 	
 	public function player(){
 	    $sessao = new Sessao();
@@ -324,10 +321,11 @@ class MovieCustomController  extends MovieController {
 	        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
 	    }
 	    if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-	        $url = 'http://getmovielist.ddns.net:888';
-	    }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888')
+	        $urlLocal = 'http://getmovielist.ddns.net:888/getmovielist/src/';
+	    }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888' 
+	        || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888')
 	    {
-	        $url = "../../";
+	        $urlLocal = "";
 	    }
 	    
 	    
@@ -341,13 +339,12 @@ class MovieCustomController  extends MovieController {
 	    $filme = json_decode(curl_exec($ch));
 	    
 	    $movie->setPosterPath($filme->backdrop_path);
-
         echo '
         <div class="p-3 container d-flex justify-content-center">
             <video id="example" poster="https://image.tmdb.org/t/p/original'.$movie->getPosterPath().'">
-                <source src="../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
+                <source src="'.$urlLocal.'../../filmes/'.$movieFile->getFilePath().'" type="video/mp4">';
         foreach($subtitleList as $subtitle2){
-            echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="'.$url.'filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
+            echo '<track kind="captions" label="'.$subtitle2->getLabel().'" srclang="'.$subtitle2->getLang().'" src="'.$urlLocal.'../../filmes/subtitles/vtt/'.$subtitle2->getFilePath().'">';
         }
         echo '
           Seu navegador não é compatível com o nosso player.
