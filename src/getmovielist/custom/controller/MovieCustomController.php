@@ -295,8 +295,14 @@ class MovieCustomController  extends MovieController {
 	    if($sessao->getNivelAcesso() == Sessao::NIVEL_COMUM){
 	        return;
 	    }
-	    
-	    echo '<iframe class="tscplayer_inline"  src="player.js/test/index.php?player='.$_GET['player'].'" scrolling="no" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+	    echo '
+
+<div class="container">
+
+<div class="ratio ratio-16x9 p-3">';
+	    echo '<iframe class="tscplayer_inline" height="800"   src="player.js/test/index.php?player='.$_GET['player'].'" scrolling="no" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+  echo '
+</div></div>';
 	}
 
 	public function main(){
@@ -378,7 +384,7 @@ class MovieCustomController  extends MovieController {
       <div class="card m-1" style="width: 10rem;">
             <img class="card-img" src="'.$foto.'" alt="Card image">
             <div class="card-body">
-              <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
+              <p><a href="./?id='.$filme->getId().'">'.utf8_encode($filme->getTitle()).'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
             </div>
       </div>
 

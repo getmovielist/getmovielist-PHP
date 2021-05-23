@@ -42,65 +42,102 @@ if(!isset($_GET['player'])){
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <link href="//vjs.zencdn.net/4.2/video-js.css" rel="stylesheet">
+	<meta charset="UTF-8">
+  <style>
+  html,body {
+    padding:0;
+    margin:0;
+    width:100%;
+    height:100%;
+  }
+  </style>
 </head>
 <body>
-  <video id="video" class="video-js vjs-default-skin"
-    controls preload="auto">
-    <?php 
-    
-    $movie = new Movie();
-    $movie->setId($_GET['player']);
-    $movieFileDao = new MovieFileDAO();
-    $movieFile = new MovieFile();
-    $movieFile->getMovie()->setId($movie->getId());
-    $lista = $movieFileDao->fetchByMovie($movieFile);
-    if(count($lista) == 0){
-        return;
-    }
-    
-    $movieFile = new MovieFile();
-    $movieFile->getMovie()->setId($movie->getId());
-    $movieFileDao = new MovieFileCustomDAO($movieFileDao->getConnection());
-    $listaMovieFiles = $movieFileDao->fetchByMovie($movieFile);
-    
-    if(count($lista) == 0){
-        return;
-    }
-    $subtitleDao = new SubtitleCustomDAO($movieFileDao->getConnection());
-    $movieFile = null;
-    foreach($listaMovieFiles as $movieFile){
-        
-        $subtitle = new Subtitle();
-        $subtitle->getMovieFile()->setId($movieFile->getId());
-        $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
-        break;
-    }
-    
-    if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
-        $urlLocal = 'http://getmovielist.ddns.net:888';
-    }else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888'
-        || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888')
-    {
-        $urlLocal = "";
-    }
-    echo '
-<source src="'.$urlLocal.'/filmes/'.$movieFile->getFilePath().'" type=\'video/mp4\' />
-<track kind="captions" label="Portugues" srclang="pt" src="'.$urlLocal.'/filmes/subtitles/vtt/The.Untouchables.1987.1080p.BluRay.DTS-ES.x264-CtrlHD.vtt">
-';
-    
-    ?>
-   
-  </video>
-  <script src="//vjs.zencdn.net/4.2/video.js"></script>
+	
+  <div id="video"></div>
+  <script src="http://jwpsrv.com/library/v71rLsS8EeOxRSIACi0I_Q.js"></script>
   <script src="/dist/player.js"></script>
-  <script>
-    videojs("video", {}, function(){
-      var adapter = playerjs.VideoJSAdapter(this);
+<?php 
 
-      adapter.ready();
-    });
-  </script>
+
+$movie = new Movie();
+$movie->setId($_GET['player']);
+$movieFileDao = new MovieFileDAO();
+$movieFile = new MovieFile();
+$movieFile->getMovie()->setId($movie->getId());
+$lista = $movieFileDao->fetchByMovie($movieFile);
+if(count($lista) == 0){
+    return;
+}
+
+$movieFile = new MovieFile();
+$movieFile->getMovie()->setId($movie->getId());
+$movieFileDao = new MovieFileCustomDAO($movieFileDao->getConnection());
+$listaMovieFiles = $movieFileDao->fetchByMovie($movieFile);
+
+if(count($lista) == 0){
+    return;
+}
+$subtitleDao = new SubtitleCustomDAO($movieFileDao->getConnection());
+$movieFile = null;
+foreach($listaMovieFiles as $movieFile){
+    
+    $subtitle = new Subtitle();
+    $subtitle->getMovieFile()->setId($movieFile->getId());
+    $subtitleList = $subtitleDao->fetchByMovieFile($subtitle);
+    break;
+}
+
+if($_SERVER['HTTP_HOST'] == 'getmovielist.com'){
+    $urlLocal = 'http://getmovielist.ddns.net:888';
+}else if($_SERVER['HTTP_HOST'] == 'getmovielist.ddns.net:888'
+    || $_SERVER['HTTP_HOST'] == 'localhost:888' || $_SERVER['HTTP_HOST'] == '192.168.0.10:888')
+{
+    $urlLocal = 'http://'. $_SERVER['HTTP_HOST'];
+}
+
+
+echo '
+  <script type="text/javascript">
+      jwplayer("video").setup({
+        file: "'.$urlLocal.'/filmes/'.$movieFile->getFilePath().'",
+        height: \'100%\',
+        width: \'100%\'';
+// $arrCode = array();
+foreach($subtitleList as $subtitle){
+    
+//     $legenda = file_get_contents($urlLocal.'/filmes/'.$subtitle->getFilePath());
+//     $temp = tmpfile();
+//     fwrite($temp, $legenda);
+//     fseek($temp, 0);
+//     echo fread($temp, 1024);
+    
+    
+//     $arrCode[] = '
+//         {
+//             "kind": "captions",
+//             "file": "'. $temp.'",
+//             "label": "'.utf8_encode($subtitle->getLabel()).'"
+//         }
+// '; 
+}
+// if(count($arrCode) > 0){
+//     echo ', "tracks": ['.implode(",", $arrCode).']';
+// }
+
+
+echo '
+      }
+
+);
+
+      var adapter = new playerjs.JWPlayerAdapter(jwplayer());
+
+      jwplayer().onReady(function(){
+        adapter.ready();
+      });
+  </script>';
+?>
+
 </body>
 </html>
