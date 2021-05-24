@@ -231,8 +231,21 @@ if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
         <script src="js/comment.js" ></script>
         <script src="js/favorite_list.js" ></script>
         <script src="js/app_user.js" ></script>
-<!--         <script src="js/movie.js" ></script> -->
-<!--         <script src="plugins/moovie/moovie.js"></script> -->
+        <script src="js/movie.js" ></script>
+<!--         <script src="plugins/moovie/moovie.js"></script> 
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+   var demo = new Moovie({
+     selector: "#example",
+     dimensions: {
+          width: "100%"
+     }
+   });
+	
+});
+
+</script>-->
+
         
 	</body>
 </html>

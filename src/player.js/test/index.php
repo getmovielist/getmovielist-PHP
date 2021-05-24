@@ -103,27 +103,20 @@ echo '
         file: "'.$urlLocal.'/filmes/'.$movieFile->getFilePath().'",
         height: \'100%\',
         width: \'100%\'';
-// $arrCode = array();
+$arrCode = array();
 foreach($subtitleList as $subtitle){
-    
-//     $legenda = file_get_contents($urlLocal.'/filmes/'.$subtitle->getFilePath());
-//     $temp = tmpfile();
-//     fwrite($temp, $legenda);
-//     fseek($temp, 0);
-//     echo fread($temp, 1024);
-    
-    
-//     $arrCode[] = '
-//         {
-//             "kind": "captions",
-//             "file": "'. $temp.'",
-//             "label": "'.utf8_encode($subtitle->getLabel()).'"
-//         }
-// '; 
+    $arrCode[] = '
+        {
+            "kind": "captions",
+            "file": "'.$urlLocal.'/filmes/'.$subtitle->getFilePath().'",
+            "label": "'.utf8_encode($subtitle->getLabel()).'"
+        }
+'; 
 }
-// if(count($arrCode) > 0){
-//     echo ', "tracks": ['.implode(",", $arrCode).']';
-// }
+
+if(count($arrCode) > 0){
+    echo ', "tracks": ['.implode(",", $arrCode).']';
+}
 
 
 echo '
