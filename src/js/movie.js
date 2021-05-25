@@ -8,16 +8,14 @@ $(document).ready(function(e) {
 		var dados = {
   			'id': idMovie
 		};
-		console.log("vamos ao ajax");
 		jQuery.ajax({
             type: "POST",
             url: "index.php?ajax=click_like",
             data: dados,
             success: function( data )
             {
-				console.log("Ajax realizado");
 				if(data == 'sucess'){
-					console.log("sucesso obtido");
+					
 					botaoClicado.addClass("botao-unlike");
 					botaoClicado.addClass("text-danger");
 					
@@ -31,8 +29,9 @@ $(document).ready(function(e) {
         botaoClicado.attr('disabled', false);
 		
 	});
-	$( "#botao-unlike" ).click(function() {
-        $('#botao-unlike').attr('disabled', true);	
+	$( ".botao-unlike" ).click(function() {
+		var botaoClicado = $(this);
+        botaoClicado.attr('disabled', true);	
 		var idMovie = $(this).attr('href');
 		var dados = {
   			'id': idMovie
@@ -44,13 +43,17 @@ $(document).ready(function(e) {
             success: function( data )
             {
 				if(data == 'sucess'){
-					$("#botao-like").removeClass("escondido");
-					$("#botao-unlike").addClass("escondido");
+
+					botaoClicado.addClass("botao-like");
+					botaoClicado.addClass("text-white");
+					
+					botaoClicado.removeClass("text-danger");
+					botaoClicado.removeClass("botao-unlike");
 				}
 				
             }
         });
-        $('#botao-unlike').attr('disabled', false);	
+        botaoClicado.attr('disabled', false);
 		
 	});
 
