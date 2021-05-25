@@ -145,11 +145,9 @@ class MovieCustomController  extends MovieController {
         $lista = array();
         $lista = $favoriteDao->fetchByAppUserAndMovie($favoriteList);
         if(count($lista) == 0){
-            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger escondido" id="botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
-            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button type="button"  class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
         }else{
-            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger" id="botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
-            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white escondido" id="botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button type="button"  class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
         }
 	        
 	    
@@ -420,7 +418,8 @@ class MovieCustomController  extends MovieController {
 	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	        $filme = json_decode(curl_exec($ch));
 	        $movie->setId($movieId);
-	        $movie->setTitle($filme->title);
+	        
+	        $movie->setTitle(utf8_decode($filme->title));
 	        $movie->setOriginalTitle($filme->original_title);
 	        $movie->setPosterPath($filme->poster_path);
 	        $movie->setReleaseDate($filme->release_date);

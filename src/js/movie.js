@@ -1,27 +1,34 @@
 
 
 $(document).ready(function(e) {
-	$( "#botao-like" ).click(function() {
-        $('#botao-like').attr('disabled', true);	
+	$( ".botao-like" ).click(function() {
+		var botaoClicado = $(this);
+        botaoClicado.attr('disabled', true);	
 		var idMovie = $(this).attr('href');
 		var dados = {
   			'id': idMovie
 		};
+		console.log("vamos ao ajax");
 		jQuery.ajax({
             type: "POST",
             url: "index.php?ajax=click_like",
             data: dados,
             success: function( data )
             {
+				console.log("Ajax realizado");
 				if(data == 'sucess'){
-					$("#botao-like").addClass("escondido");
-					$("#botao-unlike").removeClass("escondido");
+					console.log("sucesso obtido");
+					botaoClicado.addClass("botao-unlike");
+					botaoClicado.addClass("text-danger");
+					
+					botaoClicado.removeClass("text-white");
+					botaoClicado.removeClass("botao-like");
 				}
 				
 				
             }
         });
-        $('#botao-like').attr('disabled', false);
+        botaoClicado.attr('disabled', false);
 		
 	});
 	$( "#botao-unlike" ).click(function() {
