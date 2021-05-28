@@ -1,9 +1,8 @@
 
 
 $(document).ready(function(e) {
-	$( ".botao-like" ).click(function() {
-		var botaoClicado = $(this);
-        botaoClicado.attr('disabled', true);	
+	$( "#botao-like" ).click(function() {
+        $('#botao-like').attr('disabled', true);	
 		var idMovie = $(this).attr('href');
 		var dados = {
   			'id': idMovie
@@ -15,23 +14,18 @@ $(document).ready(function(e) {
             success: function( data )
             {
 				if(data == 'sucess'){
-					
-					botaoClicado.addClass("botao-unlike");
-					botaoClicado.addClass("text-danger");
-					
-					botaoClicado.removeClass("text-white");
-					botaoClicado.removeClass("botao-like");
+					$("#botao-like").addClass("escondido");
+					$("#botao-unlike").removeClass("escondido");
 				}
 				
 				
             }
         });
-        botaoClicado.attr('disabled', false);
+        $('#botao-like').attr('disabled', false);
 		
 	});
-	$( ".botao-unlike" ).click(function() {
-		var botaoClicado = $(this);
-        botaoClicado.attr('disabled', true);	
+	$( "#botao-unlike" ).click(function() {
+        $('#botao-unlike').attr('disabled', true);	
 		var idMovie = $(this).attr('href');
 		var dados = {
   			'id': idMovie
@@ -43,17 +37,13 @@ $(document).ready(function(e) {
             success: function( data )
             {
 				if(data == 'sucess'){
-
-					botaoClicado.addClass("botao-like");
-					botaoClicado.addClass("text-white");
-					
-					botaoClicado.removeClass("text-danger");
-					botaoClicado.removeClass("botao-unlike");
+					$("#botao-like").removeClass("escondido");
+					$("#botao-unlike").addClass("escondido");
 				}
 				
             }
         });
-        botaoClicado.attr('disabled', false);
+        $('#botao-unlike').attr('disabled', false);	
 		
 	});
 

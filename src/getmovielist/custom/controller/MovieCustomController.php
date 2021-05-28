@@ -56,23 +56,11 @@ class MovieCustomController  extends MovieController {
 	    
 	    
 	}
-	public function getVideos(Movie $movie){
-	    $id = $movie->getId();
-	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'/videos?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
-	    $ch = curl_init($url);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	    return json_decode(curl_exec($ch));
-	    
-	    
-	}
 	public function select(){
 	    if(!isset($_GET['id'])){
 	        return;
 	    }
-	    $movie = new Movie();
 	    $movieId = $_GET['id'];
-	    $movie->setId($movieId);
 	    $url = 'https://api.themoviedb.org/3/movie/'.$movieId.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
 	    
 	    
@@ -106,28 +94,18 @@ class MovieCustomController  extends MovieController {
                     
               <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12">
                 <div class="p-5 text-white bg-dark rounded-3">';
-	    $listVideos = $this->getVideos($movie);
 	    
 	    echo '
                   <h2>'.$filme->original_title.'</h2>
                   <p>'.$filme->overview.'</p>
-                    <p>Gêneros: '.implode("/", $listGeneros).'</p>';
-	    
-	    foreach($listVideos->results as $line){
-	        echo '
-	            
-<div class="ratio ratio-21x9">
-  <iframe src="https://www.youtube.com/embed/'.$line->key.'" title="YouTube video" allowfullscreen></iframe>
-</div>
+                    <p>Gêneros: '.implode("/", $listGeneros).'</p>
 ';
-	        
-	    }
-
 	    
 	    
 	    
 	    
-	    
+	    $movie = new Movie();
+	    $movie->setId($movieId);
 	    $this->panelLike($movie);
 	    
 	    $lista = $this->dao->fetchById($movie);
@@ -167,9 +145,11 @@ class MovieCustomController  extends MovieController {
         $lista = array();
         $lista = $favoriteDao->fetchByAppUserAndMovie($favoriteList);
         if(count($lista) == 0){
-            echo '<button type="button"  class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger escondido" id="botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white" id="botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
         }else{
-            echo '<button type="button"  class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-danger" id="botao-unlike" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
+            echo '<button class="float-right btn ml-3 btn-outline-light btn-circle btn-lg text-white escondido" id="botao-like" href="'.$movie->getId().'"><i class="fa fa-heart icone-maior"></i></button>';
         }
 	        
 	    
@@ -440,8 +420,7 @@ class MovieCustomController  extends MovieController {
 	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	        $filme = json_decode(curl_exec($ch));
 	        $movie->setId($movieId);
-	        
-	        $movie->setTitle(utf8_decode($filme->title));
+	        $movie->setTitle($filme->title);
 	        $movie->setOriginalTitle($filme->original_title);
 	        $movie->setPosterPath($filme->poster_path);
 	        $movie->setReleaseDate($filme->release_date);
