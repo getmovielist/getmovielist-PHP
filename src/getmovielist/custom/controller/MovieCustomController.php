@@ -56,11 +56,46 @@ class MovieCustomController  extends MovieController {
 	    
 	    
 	}
+	public function getVideos(Movie $movie){
+	    $id = $movie->getId();
+	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'/videos?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
+	    $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    return json_decode(curl_exec($ch));
+	    
+	    
+	}
+	public function getImages(Movie $movie){
+	    $id = $movie->getId();
+	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'/images?api_key=34a4cf2512e61f46648b95e4b7a3ec9b';
+	    
+	    
+	    $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    return json_decode(curl_exec($ch));
+	    
+	}
+	public function getProviders(Movie $movie){
+	    $id = $movie->getId();
+	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'/watch/providers?api_key=34a4cf2512e61f46648b95e4b7a3ec9b';
+	    
+	    
+	    $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    return json_decode(curl_exec($ch));
+	    
+	}
 	public function select(){
 	    if(!isset($_GET['id'])){
 	        return;
 	    }
 	    $movieId = $_GET['id'];
+	    $movie = new Movie();
+	    $movie->setId($movieId);
+	    
 	    $url = 'https://api.themoviedb.org/3/movie/'.$movieId.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
 	    
 	    
@@ -75,7 +110,7 @@ class MovieCustomController  extends MovieController {
 	        $listGeneros[] = $valor->name;
 	    }
 
-	    
+	    $imagens = $this->getImages($movie);
 	    echo '
 	        
 	        
@@ -83,31 +118,39 @@ class MovieCustomController  extends MovieController {
           <div class="card bg-dark text-white text-white bg-dark">
             <img class="card-img" src="https://image.tmdb.org/t/p/original/'.$filme->backdrop_path.'" alt="Card image">
             <div class="card-img-overlay">
-            <div class="row">
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12">
-                <div class="card bg-dark text-white text-white bg-dark rounded-3">
-                <img class="card-img" src="https://image.tmdb.org/t/p/original'.$filme->poster_path.'" alt="Card image">
-              </div>
+            <div class="row">      
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="p-5 text-white bg-dark rounded-3">
+
+                        <div class="row">
+<div class="col-xl-2 col-lg-2 col-md-2 col-sm-12">
                     
-              </div>
-                    
-                    
-              <div class="col-xl-10 col-lg-10 col-md-10 col-sm-12">
-                <div class="p-5 text-white bg-dark rounded-3">';
-	    
-	    echo '
-                  <h2>'.$filme->original_title.'</h2>
-                  <p>'.$filme->overview.'</p>
-                    <p>Gêneros: '.implode("/", $listGeneros).'</p>
+
+        <div id="carouselPosters" class="carousel slide carousel-fade" data-bs-ride="carousel">
+          <div class="carousel-inner">';
+        $act = "active";
+        foreach($imagens->posters as $imagem){
+            echo '
+            <div class="carousel-item '.$act.'">
+              <img src="https://image.tmdb.org/t/p/original/'.$imagem->file_path.'" class="d-block w-100" alt="...">
+            </div>
 ';
-	    
-	    
-	    
-	    
-	    $movie = new Movie();
-	    $movie->setId($movieId);
-	    $this->panelLike($movie);
-	    
+            $act = "";
+        }
+        echo '
+
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselPosters" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselPosters" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+
+                ';
 	    $lista = $this->dao->fetchById($movie);
 	    if(count($lista) > 0){
 	        $movie = $lista[0];
@@ -115,13 +158,105 @@ class MovieCustomController  extends MovieController {
 	        $movie->setPosterPath($filme->backdrop_path);
 	        $this->painelPrivilegios($movie);
 	    }
-	    
+        echo '
+                
+
+                </div>                    
+
+
+
+
+
+<div class="col-xl-10 col-lg-10 col-md-10 col-sm-12">
+
+                        <h2>'.$filme->title.' ('.$filme->original_title.')</h2>
+                        <p>'.$filme->overview.'</p>
+                        <p>Gêneros: '.implode("/", $listGeneros).'</p>
+';
+        echo '<p>Lançamento: '.date("Y", strtotime($filme->release_date)).'</p>';
+        $this->panelLike($movie);
+        
+        $providers = $this->getProviders($movie);
+        if(isset($providers->results->BR)){
+            if(isset($providers->results->BR->flatrate)){
+                foreach($providers->results->BR->flatrate as $line){
+                    echo '<img height="40" src="https://image.tmdb.org/t/p/original/'.$line->logo_path.'">';
+                }
+            }
+        }
+        echo '                    </div>                    </div>';
+
+        echo '<br><br>';
+        echo '
+<div class="row">
+<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+
+<div id="carouselImageBackdrops" class="carousel slide carousel-fade" data-bs-ride="carousel">
+  <div class="carousel-inner">';
+        $act = "active";
+        foreach($imagens->backdrops as $imagem){
+            
+            
+            echo '
+    <div class="carousel-item '.$act.'">
+      <img src="https://image.tmdb.org/t/p/original/'.$imagem->file_path.'" class="d-block w-100" alt="...">
+    </div>
+                
+';
+            $act = "";
+        }
+        
+        echo '
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselImageBackdrops" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselImageBackdrops" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+</div>';
+        $listVideos = $this->getVideos($movie);
+
+        echo '
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+
+';
+        foreach($listVideos->results as $line){
+            echo '
+                
+<div class="ratio ratio-21x9">
+  <iframe src="https://www.youtube.com/embed/'.$line->key.'" title="YouTube video" allowfullscreen></iframe>
+</div>
+';
+            break;
+            
+        }
+    echo '
+    
+    </div>
+</div>
+';
+       
+        
+//         print_r($imagens);
+        
+
+        
+        echo '<br>';
+
+	   
 	    echo '
 	        
+                    </div>
                 </div>
-              </div>
-	        
-            </div>
+
+
+            </div><!-- row -->
+            
 	        
           </div>
       </div>
