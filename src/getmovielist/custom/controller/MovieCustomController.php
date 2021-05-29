@@ -56,6 +56,15 @@ class MovieCustomController  extends MovieController {
 	    
 	    
 	}
+	public function getCredits(Movie $movie){
+
+	    $id = $movie->getId();
+	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'/credits?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
+	    $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    return json_decode(curl_exec($ch));
+	}
 	public function getVideos(Movie $movie){
 	    $id = $movie->getId();
 	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'/videos?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
@@ -88,6 +97,16 @@ class MovieCustomController  extends MovieController {
 	    return json_decode(curl_exec($ch));
 	    
 	}
+	public function getDetails(Movie $movie){
+	    $id = $movie->getId();
+	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
+	    
+	    
+	    $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    return json_decode(curl_exec($ch));
+	}
 	public function select(){
 	    if(!isset($_GET['id'])){
 	        return;
@@ -96,14 +115,7 @@ class MovieCustomController  extends MovieController {
 	    $movie = new Movie();
 	    $movie->setId($movieId);
 	    
-	    $url = 'https://api.themoviedb.org/3/movie/'.$movieId.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
-	    
-	    
-	    $ch = curl_init($url);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	    $filme = json_decode(curl_exec($ch));
-	    
+	    $filme = $this->getDetails($movie);
 	    
 	    $listGeneros = array();
 	    foreach($filme->genres as $valor){
@@ -132,7 +144,7 @@ class MovieCustomController  extends MovieController {
         foreach($imagens->posters as $imagem){
             echo '
             <div class="carousel-item '.$act.'">
-              <img src="https://image.tmdb.org/t/p/original/'.$imagem->file_path.'" class="d-block w-100" alt="...">
+              <img src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$imagem->file_path.'" class="d-block w-100" alt="...">
             </div>
 ';
             $act = "";
@@ -151,13 +163,7 @@ class MovieCustomController  extends MovieController {
         </div>
 
                 ';
-	    $lista = $this->dao->fetchById($movie);
-	    if(count($lista) > 0){
-	        $movie = $lista[0];
-	        $this->panelAdmMovie($movie);
-	        $movie->setPosterPath($filme->backdrop_path);
-	        $this->painelPrivilegios($movie);
-	    }
+
         echo '
                 
 
@@ -171,19 +177,53 @@ class MovieCustomController  extends MovieController {
 
                         <h2>'.$filme->title.' ('.$filme->original_title.')</h2>
                         <p>'.$filme->overview.'</p>
-                        <p>Gêneros: '.implode("/", $listGeneros).'</p>
+                        <p>Gêneros: '.implode("/", $listGeneros).' 
 ';
-        echo '<p>Lançamento: '.date("Y", strtotime($filme->release_date)).'</p>';
+        echo ' - Lançamento: '.date("Y", strtotime($filme->release_date));
+        
+        $credits = $this->getCredits($movie);
+        $diretor = "";
+        foreach($credits->cast as $line){
+            if($line->known_for_department == "Directing"){
+                $diretor = $line->name;
+            }
+        }
+        echo ' - Diretor: '.$diretor.'</p>';
+        
+        
         $this->panelLike($movie);
         
         $providers = $this->getProviders($movie);
         if(isset($providers->results->BR)){
             if(isset($providers->results->BR->flatrate)){
                 foreach($providers->results->BR->flatrate as $line){
-                    echo '<img height="40" src="https://image.tmdb.org/t/p/original/'.$line->logo_path.'">';
+                    echo '<img height="40" class="m-3" src="https://image.tmdb.org/t/p/original/'.$line->logo_path.'">';
                 }
             }
         }
+        echo '<div class="row">';
+        $i = 0;
+        foreach($credits->cast as $line){
+            $i++;
+            if($i == 13){
+                break;
+            }
+            if(!isset($line->profile_path)){
+                continue;
+            }
+            echo '
+<div class="col-sm-1 col-md-1 col-lg-1 mt-4">
+<div class="card">
+    <img class="card-img-top" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$line->profile_path.'">
+    <div class="card-block">
+          <p class="text-dark">'.$line->name.'('.$line->character.')</p>              
+    </div>
+    </div>
+</div>
+';
+            
+        }
+        echo '</div>';
         echo '                    </div>                    </div>';
 
         echo '<br><br>';
@@ -234,6 +274,13 @@ class MovieCustomController  extends MovieController {
 ';
             break;
             
+        }
+        $lista = $this->dao->fetchById($movie);
+        if(count($lista) > 0){
+            $movie = $lista[0];
+            $this->panelAdmMovie($movie);
+            $movie->setPosterPath($filme->backdrop_path);
+            $this->painelPrivilegios($movie);
         }
     echo '
     
@@ -508,7 +555,7 @@ class MovieCustomController  extends MovieController {
 	    echo '<div class="row d-flex justify-content-center">';
 	    
 	    foreach($filmes as $filme){
-	        $foto = 'https://image.tmdb.org/t/p/original'.$filme->getPosterPath();
+	        $foto = 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$filme->getPosterPath();
 	        if($filme->getPosterPath() == ""){
 	            $foto = 'sem.png';
 	        }
@@ -519,7 +566,7 @@ class MovieCustomController  extends MovieController {
       <div class="card m-1" style="width: 10rem;">
             <img class="card-img" src="'.$foto.'" alt="Card image">
             <div class="card-body">
-              <p><a href="./?id='.$filme->getId().'">'.utf8_encode($filme->getTitle()).'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
+              <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
             </div>
       </div>
 
