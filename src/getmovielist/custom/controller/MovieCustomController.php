@@ -107,6 +107,7 @@ class MovieCustomController  extends MovieController {
 	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	    return json_decode(curl_exec($ch));
 	}
+	
 	public function select(){
 	    if(!isset($_GET['id'])){
 	        return;
@@ -182,14 +183,19 @@ class MovieCustomController  extends MovieController {
         echo ' - Lançamento: '.date("Y", strtotime($filme->release_date));
         
         $credits = $this->getCredits($movie);
-        $diretor = "";
-        foreach($credits->cast as $line){
-            if($line->known_for_department == "Directing"){
-                $diretor = $line->name;
+        $diretor = array();
+        $screenplay = array();
+        foreach($credits->crew as $line){
+            if($line->job == "Director"){
+                $diretor[] = $line->name;
             }
+            if($line->job == "Screenplay"){
+                $screenplay[] = $line->name;
+            }
+            
         }
-        echo ' - Diretor: '.$diretor.'</p>';
-        
+        echo ' - Diretor: '.implode(", ", $diretor);
+        echo ' - Roteiro: '.implode(", ", $screenplay).'</p>';
         
         $this->panelLike($movie);
         
@@ -212,13 +218,11 @@ class MovieCustomController  extends MovieController {
                 continue;
             }
             echo '
-<div class="col-sm-1 col-md-1 col-lg-1 mt-4">
+<div class="col-xl-1 col-lg-1 col-md-2 col-sm-4 mt-4">
 <div class="card">
     <img class="card-img-top" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$line->profile_path.'">
-    <div class="card-block">
-          <p class="text-dark">'.$line->name.'('.$line->character.')</p>              
-    </div>
-    </div>
+</div>
+<p><b>'.$line->name.'</b><br>'.$line->character.'</p> 
 </div>
 ';
             
@@ -562,13 +566,14 @@ class MovieCustomController  extends MovieController {
 
 	        
 	        echo '
-	            
-      <div class="card m-1" style="width: 10rem;">
-            <img class="card-img" src="'.$foto.'" alt="Card image">
-            <div class="card-body">
-              <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
-            </div>
+    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-12 m-1">
+      <div class="card">
+
+            <img class="card-img-top" src="'.$foto.'" alt="Card image">
+            
       </div>
+      <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
+    </div>
 
           ';
 	        
