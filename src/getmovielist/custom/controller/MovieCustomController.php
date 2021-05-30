@@ -133,7 +133,7 @@ class MovieCustomController  extends MovieController {
             <div class="card-img-overlay">
             <div class="row">      
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                    <div class="p-5 text-white bg-dark rounded-3">
+                    <div class="p-5 text-white ">
 
                         <div class="row">
 <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12">
@@ -174,7 +174,7 @@ class MovieCustomController  extends MovieController {
 
 
 
-<div class="col-xl-10 col-lg-10 col-md-10 col-sm-12">
+<div class="col-xl-10 col-lg-10 col-md-10 col-sm-12  bg-dark rounded-3">
 
                         <h2>'.$filme->title.' ('.$filme->original_title.')</h2>
                         <p>'.$filme->overview.'</p>
@@ -233,7 +233,7 @@ class MovieCustomController  extends MovieController {
         echo '<br><br>';
         echo '
 <div class="row">
-<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
 
 <div id="carouselImageBackdrops" class="carousel slide carousel-fade" data-bs-ride="carousel">
   <div class="carousel-inner">';
@@ -266,7 +266,7 @@ class MovieCustomController  extends MovieController {
         $listVideos = $this->getVideos($movie);
 
         echo '
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
 
 ';
         foreach($listVideos->results as $line){
