@@ -225,14 +225,14 @@ class MovieCustomController  extends MovieController {
 	public function showCrew($credits){
 	    echo '<div class="row">';
 	    foreach($credits->crew as $line){
-
-	        if(!isset($line->profile_path)){
-	            continue;
+            $foto = "sem.png";
+	        if(isset($line->profile_path)){
+	            $foto = 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$line->profile_path;
 	        }
 	        echo '
 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-4 mt-4">
     <div class="card">
-        <a href="?people='.$line->id.'"><img class="card-img-top" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$line->profile_path.'"></a>
+        <a href="?people='.$line->id.'"><img class="card-img-top" src="'.$foto.'"></a>
     </div>
     <p><b><a href="?people='.$line->id.'" class="text-white">'.$line->name.'</a></b><br>'.$line->job.'</p>
 </div>
