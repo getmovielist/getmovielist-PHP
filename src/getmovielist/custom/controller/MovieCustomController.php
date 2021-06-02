@@ -289,11 +289,19 @@ class MovieCustomController  extends MovieController {
 	    if(!isset($_GET['id'])){
 	        return;
 	    }
-	    $movieId = $_GET['id'];
+	    $movieId = intval($_GET['id']);
 	    $movie = new Movie();
 	    $movie->setId($movieId);
 	    
 	    $filme = $this->getDetails($movie);
+	    if(isset($filme->status_code)){
+	        if($filme->status_code == 34){
+	            echo 'Não encontrado';
+	            return;
+	        }
+	        
+	    }
+	    
 	    $credits = $this->getCredits($movie);
 	   
 	    $listVideos = $this->getVideos($movie);
@@ -734,7 +742,7 @@ class MovieCustomController  extends MovieController {
     <div class="col-xxl-1 col-xl-1 col-lg-1 col-md-4 col-6">
       <div class="card">
 
-            <img class="card-img-top" src="'.$foto.'" alt="Card image">
+            <a href="./?id='.$filme->getId().'"><img class="card-img-top" src="'.$foto.'" alt="Card image"></a>
             
       </div>
       <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> '.$data.'</p>
