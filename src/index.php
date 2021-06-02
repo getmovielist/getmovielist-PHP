@@ -75,7 +75,8 @@ if (isset($_GET["sair"])) {
 	<link rel="stylesheet" type="text/css" href="css/style.css?a=123" />
     <title>GetMovieList</title>
 	<link rel="stylesheet" href="plugins/moovie/moovie.css">
-	   
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+	
   </head>
   <body>
 
@@ -192,7 +193,20 @@ if($sessao->getNivelAcesso() == Sessao::NIVEL_DESLOGADO){
 
 
 ?>
+<!-- Footer -->
+<footer class="py-5 bg-dark text-white">
 
+
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2020 Copyright:
+    <a href="https://getmovielist.com/"> getmovielist.com</a>
+    <p>Página sem propaganda, considere fazer uma doação: PIX jefponte@gmail.com</p>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
 <!-- Modal -->
 <div class="modal fade" id="modalResposta" tabindex="-1" aria-labelledby="labelModalResposta" aria-hidden="true">
   <div class="modal-dialog">
