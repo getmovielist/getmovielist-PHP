@@ -97,6 +97,16 @@ class MovieCustomController  extends MovieController {
 	    return json_decode(curl_exec($ch));
 	    
 	}
+	public function getPeople($idPessoa){
+	    $id = intval($idPessoa);
+	    $url = 'https://api.themoviedb.org/3/person/'.$id.'/movie_credits?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
+	    
+	    
+	    $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    return json_decode(curl_exec($ch));
+	}
 	public function getDetails(Movie $movie){
 	    $id = $movie->getId();
 	    $url = 'https://api.themoviedb.org/3/movie/'.$id.'?api_key=34a4cf2512e61f46648b95e4b7a3ec9b&language=pt-Br';
@@ -107,36 +117,59 @@ class MovieCustomController  extends MovieController {
 	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	    return json_decode(curl_exec($ch));
 	}
-	
-	public function select(){
-	    if(!isset($_GET['id'])){
-	        return;
-	    }
-	    $movieId = $_GET['id'];
-	    $movie = new Movie();
-	    $movie->setId($movieId);
+	public function showDescriptions($filme, $credits){
 	    
-	    $filme = $this->getDetails($movie);
 	    
 	    $listGeneros = array();
 	    foreach($filme->genres as $valor){
 	        $listGeneros[] = $valor->name;
 	    }
+	    
+	    
+	    $diretor = array();
+	    $screenplay = array();
+	    foreach($credits->crew as $line){
+	        if($line->job == "Director"){
+	            $diretor[] = $line->name;
+	        }
+	        if($line->job == "Screenplay"){
+	            $screenplay[] = $line->name;
+	        }
+	        
+	    }
+	    $data = "Sem data Disponível";
+	    if($filme->release_date != null){
+	        $data = date("Y", strtotime($filme->release_date));
+	    }
+	    
+	    echo' 
+    
+	    <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10">
+            <h2>'.$filme->title.' ('.$filme->original_title.')</h2>
+            <p>'.$filme->overview.'</p>
+            <p>Gêneros: '.implode("/", $listGeneros).'</p>
+            <p>Lançamento: '.$data.'</p>
+            <p>Diretor: '.implode(", ", $diretor).' - Roteiro: '.implode(", ", $screenplay).'</p>
+	    
 
-	    $imagens = $this->getImages($movie);
+';
+	    $movie = new Movie();
+	    $movie->setId($filme->id);
+	    $this->panelLike($movie);
+	    $providers = $this->getProviders($movie);
+	    if(isset($providers->results->BR)){
+	        if(isset($providers->results->BR->flatrate)){
+	            foreach($providers->results->BR->flatrate as $line){
+	                echo '<img height="40" class="m-3" src="https://image.tmdb.org/t/p/original/'.$line->logo_path.'">';
+	            }
+	        }
+	    }
+	    
+	    echo '        </div>';
+	}
+	public function showCapas($imagens){
 	    echo '
-	        
-	        
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-          <div class="card bg-dark text-white text-white bg-dark">
-            <img class="card-img" src="https://image.tmdb.org/t/p/original/'.$filme->backdrop_path.'" alt="Card image">
-            <div class="card-img-overlay">
-            <div class="row">      
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                    <div class="p-5 text-white ">
-
-                        <div class="row">
-<div class="col-xl-2 col-lg-2 col-md-2 col-sm-12">
+<div class="col-xl-2 col-lg-2 col-md-2 col-sm-2">
                     
 
         <div id="carouselPosters" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -162,78 +195,54 @@ class MovieCustomController  extends MovieController {
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-
-                ';
-
-        echo '
-                
-
-                </div>                    
+</div>  
 
 
 
-
-
-<div class="col-xl-10 col-lg-10 col-md-10 col-sm-12  bg-dark rounded-3">
-
-                        <h2>'.$filme->title.' ('.$filme->original_title.')</h2>
-                        <p>'.$filme->overview.'</p>
-                        <p>Gêneros: '.implode("/", $listGeneros).' 
 ';
-        echo ' - Lançamento: '.date("Y", strtotime($filme->release_date));
-        
-        $credits = $this->getCredits($movie);
-        $diretor = array();
-        $screenplay = array();
-        foreach($credits->crew as $line){
-            if($line->job == "Director"){
-                $diretor[] = $line->name;
-            }
-            if($line->job == "Screenplay"){
-                $screenplay[] = $line->name;
-            }
-            
-        }
-        echo ' - Diretor: '.implode(", ", $diretor);
-        echo ' - Roteiro: '.implode(", ", $screenplay).'</p>';
-        
-        $this->panelLike($movie);
-        
-        $providers = $this->getProviders($movie);
-        if(isset($providers->results->BR)){
-            if(isset($providers->results->BR->flatrate)){
-                foreach($providers->results->BR->flatrate as $line){
-                    echo '<img height="40" class="m-3" src="https://image.tmdb.org/t/p/original/'.$line->logo_path.'">';
-                }
-            }
-        }
-        echo '<div class="row">';
-        $i = 0;
-        foreach($credits->cast as $line){
-            $i++;
-            if($i == 13){
-                break;
-            }
-            if(!isset($line->profile_path)){
-                continue;
-            }
-            echo '
+	}
+	public function showCast($credits){
+	    $i = 0;
+	    echo '<div class="row">';
+	    foreach($credits->cast as $line){
+	        $i++;
+	        
+	        if(!isset($line->profile_path)){
+	            continue;
+	        }
+	        echo '
 <div class="col-xl-1 col-lg-1 col-md-2 col-sm-4 mt-4">
-<div class="card">
-    <img class="card-img-top" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$line->profile_path.'">
-</div>
-<p><b>'.$line->name.'</b><br>'.$line->character.'</p> 
+    <div class="card">
+        <a href="?people='.$line->id.'"><img class="card-img-top" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$line->profile_path.'"></a>
+    </div>
+    <p><b><a href="?people='.$line->id.'" class="text-white">'.$line->name.'</a></b><br>'.$line->character.'</p>
 </div>
 ';
-            
-        }
-        echo '</div>';
-        echo '                    </div>                    </div>';
+	        
+	    }
+	    echo '</div>';
+	}
+	public function showCrew($credits){
+	    echo '<div class="row">';
+	    foreach($credits->crew as $line){
 
-        echo '<br><br>';
-        echo '
-<div class="row">
-<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+	        if(!isset($line->profile_path)){
+	            continue;
+	        }
+	        echo '
+<div class="col-xl-1 col-lg-1 col-md-2 col-sm-4 mt-4">
+    <div class="card">
+        <a href="?people='.$line->id.'"><img class="card-img-top" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$line->profile_path.'"></a>
+    </div>
+    <p><b><a href="?people='.$line->id.'" class="text-white">'.$line->name.'</a></b><br>'.$line->job.'</p>
+</div>
+';
+	        
+	    }
+	    echo '</div>';
+	}
+	public function showPictures($imagens){
+	    echo '
 
 <div id="carouselImageBackdrops" class="carousel slide carousel-fade" data-bs-ride="carousel">
   <div class="carousel-inner">';
@@ -262,23 +271,147 @@ class MovieCustomController  extends MovieController {
   </button>
 </div>
 
-</div>';
-        $listVideos = $this->getVideos($movie);
-
-        echo '
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-
 ';
-        foreach($listVideos->results as $line){
-            echo '
-                
+	}
+	public function showVideos($listVideos){
+	    foreach($listVideos->results as $line){
+	        echo '
+	            
 <div class="ratio ratio-21x9">
   <iframe src="https://www.youtube.com/embed/'.$line->key.'" title="YouTube video" allowfullscreen></iframe>
 </div>
 ';
-            break;
-            
-        }
+	        
+	    }
+	}
+	public function select(){
+	    if(!isset($_GET['id'])){
+	        return;
+	    }
+	    $movieId = $_GET['id'];
+	    $movie = new Movie();
+	    $movie->setId($movieId);
+	    
+	    $filme = $this->getDetails($movie);
+	    $credits = $this->getCredits($movie);
+	   
+	    $listVideos = $this->getVideos($movie);
+	    $imagens = $this->getImages($movie);
+	    echo '
+	        
+	        
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <div class="card text-white bg-dark">
+            <img class="card-img" src="https://image.tmdb.org/t/p/original/'.$filme->backdrop_path.'" alt="Card image">
+            <div class="card-img-overlay">
+            <div class="row">      
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="p-5 text-white ">
+
+                        <div class="row">
+                  
+
+
+
+
+
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12  bg-dark rounded-3 p-4">
+    <div class="row">';
+	    $this->showCapas($imagens);
+	    $this->showDescriptions($filme, $credits);
+	    echo '
+    </div>';
+	    
+        
+        
+	    echo '
+
+<div class="row d-flex justify-content-center p-3">
+
+<div class="accordion accordion-flush" id="accordionFlushExample">
+
+<div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingCast">
+      <button class="accordion-button collapsed  bg-dark text-white border border-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseCast" aria-expanded="false" aria-controls="flush-collapsePictures">
+        Elenco
+      </button>
+    </h2>
+    <div id="flush-collapseCast" class="accordion-collapse collapse show" aria-labelledby="flush-headingCast" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body bg-dark ">';
+      $this->showCast($credits);
+      echo '
+
+        </div>
+    </div>
+  </div>
+
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingCrew">
+      <button class="accordion-button collapsed bg-dark text-white border border-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseCrew" aria-expanded="false" aria-controls="flush-collapseCrew">
+        Equipe Técnica
+      </button>
+    </h2>
+    <div id="flush-collapseCrew" class="accordion-collapse collapse" aria-labelledby="flush-headingCrew" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body bg-dark">';
+	    $this->showCrew($credits);
+      echo '</div>
+    </div>
+  </div>
+
+  
+
+
+
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingPictures">
+      <button class="accordion-button collapsed  bg-dark text-white border border-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePictures" aria-expanded="false" aria-controls="flush-collapsePictures">
+        Fotos
+      </button>
+    </h2>
+    <div id="flush-collapsePictures" class="accordion-collapse collapse" aria-labelledby="flush-headingPictures" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body   bg-dark ">';
+      $this->showPictures($imagens);
+      echo '
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingVideos">
+      <button class="accordion-button collapsed  bg-dark text-white border border-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseVideos" aria-expanded="false" aria-controls="flush-collapseVideos">
+        Videos
+      </button>
+    </h2>
+    <div id="flush-collapseVideos" class="accordion-collapse collapse" aria-labelledby="flush-headingVideos" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body   bg-dark ">';
+      $this->showVideos($listVideos);
+        echo '</div>
+    </div>
+  </div>
+</div>
+
+
+';
+
+        
+        
+
+        
+        echo '</div>';
+        
+        
+        echo '                    </div>                    </div>';
+
+
+
+
         $lista = $this->dao->fetchById($movie);
         if(count($lista) > 0){
             $movie = $lista[0];
@@ -286,20 +419,7 @@ class MovieCustomController  extends MovieController {
             $movie->setPosterPath($filme->backdrop_path);
             $this->painelPrivilegios($movie);
         }
-    echo '
-    
-    </div>
-</div>
-';
-       
-        
-//         print_r($imagens);
-        
 
-        
-        echo '<br>';
-
-	   
 	    echo '
 	        
                     </div>
@@ -491,6 +611,56 @@ class MovieCustomController  extends MovieController {
 </div></div>';
 	}
 
+	public function selectPeople(){
+	    if(!isset($_GET['people'])){
+	        return;
+	    }
+	    $pessoa = $this->getPeople($_GET['people']);
+	    $listMovies = array();
+	    foreach($pessoa->crew as $valor){
+	        
+	        $movie = new Movie();
+	        if(!isset($listMovies[$valor->job])){
+	            $listMovies[$valor->job] = array();
+	        }
+	        $listMovies[$valor->job][] = $movie;
+	        $movie->setId($valor->id);
+	        $movie->setTitle($valor->title);
+	        if(isset($valor->poster_path)){
+	            $movie->setPosterPath($valor->poster_path);
+	        }
+	        if(isset($valor->release_date)){
+	            $movie->setReleaseDate($valor->release_date);
+	        }
+	        
+	    }
+	    foreach($pessoa->cast as $valor){
+	        
+	        $movie = new Movie();
+	        if(!isset($listMovies['cast'])){
+	            $listMovies['cast'] = array();
+	        }
+	        
+	        $listMovies['cast'][] = $movie;
+	        $movie->setId($valor->id);
+	        $movie->setTitle($valor->title);
+	        if(isset($valor->poster_path)){
+	            $movie->setPosterPath($valor->poster_path);
+	        }
+	        if(isset($valor->release_date)){
+	            $movie->setReleaseDate($valor->release_date);
+	        }
+	        	
+	    }
+
+	    foreach($listMovies as $chave => $valor){
+	        echo '<h1>'.$chave.'</h1>';
+	        $this->showMovies($valor);
+	    }
+	    
+        
+	    
+	}
 	public function main(){
         
         if(isset($_REQUEST['api'])){
@@ -503,6 +673,10 @@ class MovieCustomController  extends MovieController {
 	    }
 	    if(isset($_GET['player'])){
 	        $this->player();
+	        return;
+	    }
+	    if(isset($_GET['people'])){
+	        $this->selectPeople();
 	        return;
 	    }
 	    if(isset($_GET['pesquisa'])){
@@ -564,6 +738,11 @@ class MovieCustomController  extends MovieController {
 	            $foto = 'sem.png';
 	        }
 
+	        $data = "";
+	        if($filme->getReleaseDate() != null){
+	            $data = '('.date("Y", strtotime($filme->getReleaseDate())).')';
+	        }
+	        
 	        
 	        echo '
     <div class="col-xl-1 col-lg-1 col-md-1 col-sm-12 m-1">
@@ -572,7 +751,7 @@ class MovieCustomController  extends MovieController {
             <img class="card-img-top" src="'.$foto.'" alt="Card image">
             
       </div>
-      <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> ('.date("Y", strtotime($filme->getReleaseDate())).')</p>
+      <p><a href="./?id='.$filme->getId().'">'.$filme->getTitle().'</a> '.$data.'</p>
     </div>
 
           ';
