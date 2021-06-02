@@ -29,7 +29,11 @@ use getmovielist\custom\controller\MainContent;
 use getmovielist\custom\controller\MovieCustomController;
 
 $sessao = new Sessao();
-
+if(isset($_GET['subtitle'])){
+    $controller = new MovieCustomController();
+    $controller->getSubtitle();
+    return;
+}
 if(isset($_GET['ajax'])){
 
     switch ($_GET['ajax']){

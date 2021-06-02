@@ -415,12 +415,6 @@ class MovieCustomController  extends MovieController {
         
         echo '</div>';
         
-        
-        echo '                    </div>                    </div>';
-
-
-
-
         $lista = $this->dao->fetchById($movie);
         if(count($lista) > 0){
             $movie = $lista[0];
@@ -428,6 +422,12 @@ class MovieCustomController  extends MovieController {
             $movie->setPosterPath($filme->backdrop_path);
             $this->painelPrivilegios($movie);
         }
+        echo '                    </div>                    </div>';
+
+
+
+
+
 
 	    echo '
 	        
@@ -545,14 +545,14 @@ class MovieCustomController  extends MovieController {
 	        }
 	        foreach($subtitleList as $subtitle2)
 	        {
-	            echo '<a href="'.$subtitle2->getFilePath().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-font icone-maior"></i></a>';
+	            echo '<a href="?subtitle='.$subtitle2->getId().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-font icone-maior"></i></a>';
 	        }
 	        
-            echo '<a href="'.$movieFile->getFilePath().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-film icone-maior"></i></a>';
+//             echo '<a href="'.$movieFile->getFilePath().'" class="float-right btn m-1 btn-outline-light btn-circle btn-lg text-white"><i class="fa fa-film icone-maior"></i></a>';
 	        
 
-            echo '<a href="?player='.$movie->getId().'"
-                        class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
+//             echo '<a href="?player='.$movie->getId().'"
+//                         class="float-right btn ml-3 btn-outline-light btn-lg text-white"><i class="fa fa-play icone-maior"></i></a>';
                 
             
 
@@ -670,6 +670,39 @@ class MovieCustomController  extends MovieController {
         
 	    
 	}
+	public function getSubtitle(){
+	    if(!isset($_GET['subtitle'])){
+	        return;
+	    }
+	    $id = intval($_GET['subtitle']);
+	    $subtitle = new Subtitle();
+	    $subtitle->setId($id);
+	    $subtitleDao = new SubtitleCustomDAO();
+	    $lista = $subtitleDao->fetchById($subtitle);
+	    if(count($lista) == 0){
+	        echo 'Legenda não encontrada';
+	        return;
+	    }
+	    $subtitle = $lista[0];
+	    if(file_exists("../subtitle/".$subtitle->getLang().'/'.$subtitle->getFilePath())){
+	        $nomeArquivo = "../subtitle/".$subtitle->getLang().'/'.$subtitle->getFilePath();
+	        if($file=fopen($nomeArquivo,'w+')) {
+	            header('Content-Description: File Transfer');
+	            header('Content-Disposition: attachment; filename="'.$subtitle->getFilePath().'"');
+	            header('Content-Type: application/octet-stream');
+	            header('Content-Transfer-Encoding: binary');
+	            header('Content-Length: ' . filesize($nomeArquivo));
+	            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	            header('Pragma: public');
+	            header('Expires: 0');
+	            fclose($file);
+	            readfile($nomeArquivo);
+	        }
+	    }else
+	    {   
+	        echo 'Arquivo não encontrado';
+	    }
+	}
 	public function main(){
         
         if(isset($_REQUEST['api'])){
@@ -686,6 +719,10 @@ class MovieCustomController  extends MovieController {
 	    }
 	    if(isset($_GET['people'])){
 	        $this->selectPeople();
+	        return;
+	    }
+	    if(isset($_GET['subtitle'])){
+	        echo 'Ainda não implementei essa página';
 	        return;
 	    }
 	    $lista = array();
