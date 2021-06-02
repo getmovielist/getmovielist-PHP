@@ -274,6 +274,7 @@ class MovieCustomController  extends MovieController {
 ';
 	}
 	public function showVideos($listVideos){
+
 	    foreach($listVideos->results as $line){
 	        echo '
 	            
@@ -336,7 +337,7 @@ class MovieCustomController  extends MovieController {
         Elenco
       </button>
     </h2>
-    <div id="flush-collapseCast" class="accordion-collapse collapse show" aria-labelledby="flush-headingCast" data-bs-parent="#accordionFlushExample">
+    <div id="flush-collapseCast" class="accordion-collapse collapse" aria-labelledby="flush-headingCast" data-bs-parent="#accordionFlushExample">
         <div class="accordion-body bg-dark ">';
       $this->showCast($credits);
       echo '
@@ -679,8 +680,8 @@ class MovieCustomController  extends MovieController {
 	        $this->selectPeople();
 	        return;
 	    }
+	    $lista = array();
 	    if(isset($_GET['pesquisa'])){
-	        echo '<div class="row d-flex justify-content-center">';
 	        $pesquisa = $_GET['pesquisa'];
 	        $pesquisa = str_replace(" ", "+", $pesquisa);
 	        
@@ -690,38 +691,23 @@ class MovieCustomController  extends MovieController {
 	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	        $filmes = json_decode(curl_exec($ch));
+	        
 	        foreach($filmes->results as $filme){
-	            $foto = 'https://image.tmdb.org/t/p/original'.$filme->poster_path;
-	            if($filme->poster_path == ""){
-	                $foto = 'sem.png';
-	                
-	            }
-	            if(!isset($filme->release_date)){
-	                continue;
-	            }
-	            
-	            echo '
-
-
-	                
-        <div class="card m-1" style="width: 10rem;">
-            <img class="card-img-top" src="'.$foto.'" alt="Card image cap">
-            <div class="card-body">
-                <p><a href="./?id='.$filme->id.'">'.$filme->original_title.'</a> ('.date("Y", strtotime($filme->release_date)).')</p>
-            </div>
-        </div>
-            ';
-	            
+	            $movie = new Movie();
+	            $movie->setPosterPath($filme->poster_path);
+	            $movie->setReleaseDate($filme->release_date);
+	            $movie->setId($filme->id);
+	            $movie->setOriginalTitle($filme->original_title);
+	            $movie->setTitle($filme->title);
+	            $lista[] = $movie;
 	            
 	        }
-	        echo '</div>';
 	    }else{
 	        $movieDao = new MovieDAO();
-	        $filmes = $movieDao->fetch();
-	        $this->showMovies($filmes);
+	        $lista = $movieDao->fetch();
 	    }
 	    
-	    
+	    $this->showMovies($lista);
 	    
 	}
 	/**
@@ -730,7 +716,7 @@ class MovieCustomController  extends MovieController {
 	 */
 	public function showMovies($filmes){
 	    
-	    echo '<div class="row d-flex justify-content-center">';
+	    echo '<div class="row">';
 	    
 	    foreach($filmes as $filme){
 	        $foto = 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/'.$filme->getPosterPath();
@@ -745,7 +731,7 @@ class MovieCustomController  extends MovieController {
 	        
 	        
 	        echo '
-    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-12 m-1">
+    <div class="col-xxl-1 col-xl-1 col-lg-1 col-md-4 col-6">
       <div class="card">
 
             <img class="card-img-top" src="'.$foto.'" alt="Card image">
