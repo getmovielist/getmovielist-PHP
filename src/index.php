@@ -80,7 +80,7 @@ if (isset($_GET["sair"])) {
     <title>GetMovieList</title>
 	<link rel="stylesheet" href="plugins/moovie/moovie.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
-	
+	<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
   </head>
   <body>
 
